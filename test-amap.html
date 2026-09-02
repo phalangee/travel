@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高德地图测试</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #map { width: 100%; height: 300px; border: 1px solid #ccc; margin: 20px 0; }
+    #log { background: #f5f5f5; padding: 10px; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <h1>高德地图加载测试</h1>
+  <div id="map"></div>
+  <div id="log">开始测试...</div>
+
+  <script>
+    const log = document.getElementById('log');
+    function addLog(msg, isError) {
+      const div = document.createElement('div');
+      div.textContent = new Date().toLocaleTimeString() + ' ' + msg;
+      div.className = isError ? 'error' : 'success';
+      log.appendChild(div);
+    }
+
+    const CONFIG = {
+      amapKey: 'ab10bfdcc0e06478735ae25129b46df8',
+      securityJsCode: 'ae86d3a5bb46afdf05ead56ca5e66293'
+    };
+
+    // 1. 设置安全密钥
+    addLog('1. 设置安全密钥...');
+    window._AMapSecurityConfig = { securityJsCode: CONFIG.securityJsCode };
+    addLog('   _AMapSecurityConfig 已设置');
+
+    // 2. 加载 loader.js
+    addLog('2. 加载 loader.js...');
+    const loader = document.createElement('script');
+    loader.src = 'https://webapi.amap.com/loader.js';
+    loader.onload = function() {
+      addLog('3. loader.js 加载成功');
+      addLog('   AMapLoader 是否存在: ' + !!window.AMapLoader);
+
+      // 3. 加载地图
+      addLog('4. 调用 AMapLoader.load...');
+      window.AMapLoader.load({
+        key: CONFIG.amapKey,
+        version: '2.0'
+      }).then(function(AMap) {
+        addLog('5. 地图加载成功！', false);
+        addLog('   AMap 版本: ' + (AMap.version || 'unknown'));
+
+        // 初始化地图
+        const map = new AMap.Map('map', {
+          zoom: 11,
+          center: [116.397428, 39.90923],
+          viewMode: '2D'
+        });
+        addLog('6. 地图实例创建成功');
+
+        // 添加标记
+        const marker = new AMap.Marker({
+          position: [116.397428, 39.90923],
+          title: '天安门'
+        });
+        map.add(marker);
+        addLog('7. 标记添加成功');
+
+      }).catch(function(err) {
+        addLog('5. 地图加载失败: ' + (err && err.message ? err.message : JSON.stringify(err)), true);
+        console.error('AMapLoader error:', err);
+      });
+    };
+    loader.onerror = function() {
+      addLog('3. loader.js 加载失败', true);
+    };
+    document.head.appendChild(loader);
+  </script>
+</body>
+</html>
