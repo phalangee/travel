@@ -149,10 +149,13 @@ function createDynamicMap(container, places, note, drawPath) {
     }
 
     try {
-      // 计算中心点和合适的 zoom
-      var bounds = new AMap.Bounds();
-      pts.forEach(function (p) { bounds.extend(p.location); });
-      var center = bounds.getCenter();
+      // 计算中心点
+      var lngs = pts.map(function (p) { return p.location[0]; });
+      var lats = pts.map(function (p) { return p.location[1]; });
+      var center = [
+        (Math.min.apply(null, lngs) + Math.max.apply(null, lngs)) / 2,
+        (Math.min.apply(null, lats) + Math.max.apply(null, lats)) / 2
+      ];
 
       // 创建地图
       var map = new AMap.Map(container, {
