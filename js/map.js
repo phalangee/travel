@@ -73,9 +73,13 @@ function failAll(msg) {
 var activeMaps = []; // [{ container, map }]
 var MAX_CONCURRENT_MAPS = 4;
 
-/* 新建地图的保护期：初始化是异步的，此时销毁会在高德内部抛
- * "Cannot read properties of undefined (reading 'getOptions')"，因此 3 秒内不回收 */
-var MAP_EVICTION_GRACE_MS = 3000;
+/* 新建地图的优先保护期：初始化是异步的，刚建就销毁会在高德内部抛
+ * "Cannot read properties of undefined (reading 'getOptions')"。
+ * 注意这只是"优先回收顺序"，不是豁免——并发上限必须严格硬执行：
+ * 每个地图实例带 Web Worker + WebGL 上下文，快速滑动时若允许超额，
+ * 峰值可达 13 个实例，手机渲染进程会内存耗尽直接崩溃（Chrome 报
+ * "网页重复出现问题"）。 */
+var MAP_EVICTION_GRACE_MS = 1500;
 
 function destroyMapRec(rec) {
   try { rec.map.destroy(); } catch (e) { /* ignore */ }
@@ -89,22 +93,24 @@ function destroyMapRec(rec) {
 
 function registerMap(container, map) {
   var now = Date.now();
-  // 超出限制时，销毁最早的、已过保护期的实例；全程路线图常驻不回收。
-  // 若所有实例都在保护期内，允许暂时超额，待下次注册时再回收。
-  while (activeMaps.length >= MAX_CONCURRENT_MAPS) {
-    var victim = null;
+  activeMaps.push({ container: container, map: map, createdAt: now });
+  // 硬上限：存活实例绝不超 MAX_CONCURRENT_MAPS（含全程路线图在内）。
+  // 全程路线图常驻不回收；其余按"最早的已过保护期者优先"回收，
+  // 若全在保护期内则回收最早的——宁可承担偶发的控制台报错，
+  // 也不能让实例堆积导致页面崩溃。
+  while (activeMaps.length > MAX_CONCURRENT_MAPS) {
+    var victim = null, fallback = null;
     for (var i = 0; i < activeMaps.length; i++) {
       var r = activeMaps[i];
-      if (r.container && r.container.id === 'route-map') continue; // 全程路线图不回收
-      if (now - r.createdAt < MAP_EVICTION_GRACE_MS) continue;     // 初始化保护期
-      victim = r;
-      break;
+      if (r.container && r.container.id === 'route-map') continue;
+      if (!fallback) fallback = r;
+      if (now - r.createdAt >= MAP_EVICTION_GRACE_MS) { victim = r; break; }
     }
-    if (!victim) break;
+    if (!victim) victim = fallback;
+    if (!victim) break; // 只剩全程路线图，不再回收
     activeMaps.splice(activeMaps.indexOf(victim), 1);
     destroyMapRec(victim);
   }
-  activeMaps.push({ container: container, map: map, createdAt: now });
 }
 
 function unregisterMap(container) {
