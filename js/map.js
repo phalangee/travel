@@ -73,23 +73,38 @@ function failAll(msg) {
 var activeMaps = []; // [{ container, map }]
 var MAX_CONCURRENT_MAPS = 4;
 
-function registerMap(container, map) {
-  // 如果超出限制，销毁最早的（但保留全程路线图，因为它最重要）
-  while (activeMaps.length >= MAX_CONCURRENT_MAPS) {
-    var oldest = activeMaps.shift();
-    if (oldest && oldest.map) {
-      // 如果 oldest 是全程路线图，把它放回去，销毁下一个
-      if (oldest.container && oldest.container.id === 'route-map') {
-        activeMaps.unshift(oldest);
-        oldest = activeMaps.shift();
-      }
-      if (oldest && oldest.map) {
-        try { oldest.map.destroy(); } catch (e) { /* ignore */ }
-        if (oldest.container) oldest.container.innerHTML = '';
-      }
-    }
+/* 新建地图的保护期：初始化是异步的，此时销毁会在高德内部抛
+ * "Cannot read properties of undefined (reading 'getOptions')"，因此 3 秒内不回收 */
+var MAP_EVICTION_GRACE_MS = 3000;
+
+function destroyMapRec(rec) {
+  try { rec.map.destroy(); } catch (e) { /* ignore */ }
+  if (rec.container) {
+    rec.container.innerHTML = '';
+    // 重置懒加载状态，容器再次进入视口时可重新初始化
+    if (rec.container.__mapRec) rec.container.__mapRec.initialized = false;
+    if (rec.container.__mapCleanup) rec.container.__mapCleanup = null;
   }
-  activeMaps.push({ container: container, map: map });
+}
+
+function registerMap(container, map) {
+  var now = Date.now();
+  // 超出限制时，销毁最早的、已过保护期的实例；全程路线图常驻不回收。
+  // 若所有实例都在保护期内，允许暂时超额，待下次注册时再回收。
+  while (activeMaps.length >= MAX_CONCURRENT_MAPS) {
+    var victim = null;
+    for (var i = 0; i < activeMaps.length; i++) {
+      var r = activeMaps[i];
+      if (r.container && r.container.id === 'route-map') continue; // 全程路线图不回收
+      if (now - r.createdAt < MAP_EVICTION_GRACE_MS) continue;     // 初始化保护期
+      victim = r;
+      break;
+    }
+    if (!victim) break;
+    activeMaps.splice(activeMaps.indexOf(victim), 1);
+    destroyMapRec(victim);
+  }
+  activeMaps.push({ container: container, map: map, createdAt: now });
 }
 
 function unregisterMap(container) {
@@ -248,20 +263,28 @@ function getMapObserver() {
       if (!rec) return;
 
       if (entry.isIntersecting) {
-        // 进入视口：初始化地图
+        // 进入视口：取消待执行的销毁，必要时初始化地图
+        clearTimeout(rec.exitTimer);
         if (!rec.initialized) {
           rec.initialized = true;
           createDynamicMap(entry.target, rec.places, rec.note, rec.drawPath);
         }
       } else {
-        // 离开视口：销毁地图释放内存（可选，根据性能调整）
-        if (rec.initialized && entry.target.__mapCleanup) {
-          entry.target.__mapCleanup();
-          entry.target.__mapCleanup = null;
-          rec.initialized = false;
-          // 清空容器，下次进入时重新初始化
-          entry.target.innerHTML = '';
-          entry.target.classList.remove('map-fallback');
+        // 离开视口：延迟销毁释放内存。
+        // 立即销毁会在快速滑动时与地图的异步初始化竞争，
+        // 触发 AMap 内部 "Cannot read properties of undefined (reading 'getOptions')"，
+        // 因此等 3 秒，若期间卡片重新进入视口则取消销毁。
+        if (rec.initialized) {
+          clearTimeout(rec.exitTimer);
+          rec.exitTimer = setTimeout(function () {
+            if (entry.target.__mapCleanup) {
+              entry.target.__mapCleanup();
+              entry.target.__mapCleanup = null;
+              rec.initialized = false;
+              entry.target.innerHTML = '';
+              entry.target.classList.remove('map-fallback');
+            }
+          }, 3000);
         }
       }
     });

@@ -74,7 +74,9 @@ button { font: inherit; cursor: pointer; }
 .block__item { font-size: 15px; margin: 4px 0; }
 
 /* ---------- 主页：足迹 ---------- */
-.footprint__map, .trip-head__map, .day-card__map {
+/* 注意：选择器带 .page 前缀以提高优先级 —— 高德 JSAPI 2.0 初始化后会注入 .amap-container { height:100%; min-height:inherit }
+ * 的样式表，若优先级不足会把容器高度压成 0，导致地图不可见。 */
+.page .footprint__map, .page .trip-head__map, .page .day-card__map {
   min-height: 200px; height: 200px; border-radius: var(--radius);
   background: #e8eef7; overflow: hidden; box-shadow: var(--shadow);
 }
@@ -149,7 +151,7 @@ button { font: inherit; cursor: pointer; }
 .day-card__info { list-style: none; }
 .day-card__info-item { font-size: 15px; margin: 5px 0; }
 .day-card__info-item--hl { color: #b45309; }
-.day-card__map { min-height: 180px; height: 180px; margin-top: 12px; }
+.page .day-card__map { min-height: 180px; height: 180px; margin-top: 12px; }
 
 /* Tab */
 .day-card__tabs { margin-top: 14px; }
@@ -201,7 +203,6 @@ button { font: inherit; cursor: pointer; }
 .pin--transfer { background: var(--gray); }
 
 /* ---------- 高德覆盖物 ---------- */
-.amap-container { width: 100%; height: 100%; min-height: inherit; }
 .amap-pin {
   width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff;
   display: flex; align-items: center; justify-content: center;
