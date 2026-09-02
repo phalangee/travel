@@ -265,17 +265,9 @@
         }
       }
     });
-    // 如果超过10个点，采样显示（保留起点、终点和中间关键节点）
-    if (allLodgings.length > 10) {
-      var step = Math.ceil(allLodgings.length / 10);
-      allLodgings.forEach(function (p, i) {
-        if (i === 0 || i === allLodgings.length - 1 || i % step === 0) {
-          lodgingPlaces.push(p);
-        }
-      });
-    } else {
-      lodgingPlaces = allLodgings;
-    }
+    // 不再提前采样：页内图钉全量显示（碰撞图层自动处理标签），
+    // 跳转高德 App 的多点标注 URL 上限 10 个，由 buildAmapNavUrl 等距采样
+    lodgingPlaces = allLodgings;
     initPlaceMap(routeMapBox, lodgingPlaces, '全程路线', true, false);
 
     // 日期条 + 日卡

@@ -256,6 +256,21 @@ function drawDrivingRoute(map, pts) {
 function applyPlacesToMap(map, pts, drawPath) {
   // collision:true 仅让文字标签在重叠时自动隐藏，图标始终显示；
   // 不能开 allowCollision（图标也会互相碰撞隐藏，小视野下会全部消失）
+  // 同坐标的点（如机场与机场酒店）图钉会精确重叠成一个，自动加微小
+  // 偏移让它们分开显示；偏移在 300px 小图上约 10~20px，不影响位置感
+  var seen = {};
+  var offsetPts = pts.map(function (p) {
+    var key = p.location.join(',');
+    var n = seen[key] || 0;
+    seen[key] = n + 1;
+    if (!n) return p;
+    var loc = [p.location[0] + 0.004 * n, p.location[1] + 0.003 * n];
+    var q = {}; for (var k in p) q[k] = p[k];
+    q.location = loc;
+    return q;
+  });
+  pts = offsetPts;
+
   var labelsLayer = new AMap.LabelsLayer({
     zooms: [3, 20],
     collision: true,
@@ -288,15 +303,23 @@ function applyPlacesToMap(map, pts, drawPath) {
   map.setFitView(null, false, [40, 40, 40, 40]);
 }
 
-/* ---------- 跳转高德 App：navigation URI（from/to/via，坐标高德系） ---------- */
+/* ---------- 跳转高德 App：多点标注 URI（全部点带名字，坐标高德系） ----------
+ * 不用 navigation：官方 URI 规范 via 最多只支持 1 个途经点，
+ * 跳过去只能看到起终点+1 个途经点；marker 的 markers 参数
+ * 可一次展示全部点（上限 10 个，超出时等距采样保留首尾）。 */
 function buildAmapNavUrl(pts) {
   if (!pts || pts.length < 2) return null;
-  var fmt = function (p) { return p.location.join(',') + ',' + encodeURIComponent(p.shortName || p.name); };
-  var url = 'https://uri.amap.com/navigation?from=' + fmt(pts[0]) +
-    '&to=' + fmt(pts[pts.length - 1]);
-  var via = pts.slice(1, -1).slice(0, 16); // via 上限 16 个
-  via.forEach(function (p) { url += '&via=' + fmt(p); });
-  return url + '&mode=car&coordinate=gaode&callnative=1&src=mytravel';
+  var shown = pts;
+  if (pts.length > 10) {
+    shown = [];
+    var step = (pts.length - 1) / 9;
+    for (var i = 0; i < 10; i++) shown.push(pts[Math.round(i * step)]);
+  }
+  var markers = shown.map(function (p) {
+    return p.location.join(',') + ',' + encodeURIComponent(p.shortName || p.name);
+  }).join('|');
+  return 'https://uri.amap.com/marker?markers=' + markers +
+    '&coordinate=gaode&callnative=1&src=mytravel';
 }
 
 /* 在地图右上角放"高德App打开"按钮（整块地图可拖动，用按钮而不是全图点击） */
