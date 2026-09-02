@@ -149,6 +149,10 @@ function createDynamicMap(container, places, note, drawPath) {
     }
 
     try {
+      // 清空容器，移除 fallback 样式，准备创建地图
+      container.innerHTML = '';
+      container.classList.remove('map-fallback');
+
       // 计算中心点
       var lngs = pts.map(function (p) { return p.location[0]; });
       var lats = pts.map(function (p) { return p.location[1]; });
