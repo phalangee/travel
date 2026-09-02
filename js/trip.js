@@ -59,8 +59,11 @@
     mapBox.setAttribute('role', 'img');
     mapBox.setAttribute('aria-label', 'D' + day.dayIndex + ' 路线图');
     card.appendChild(mapBox);
+    // 延迟加载地图，避免同时初始化过多地图实例导致崩溃
     const places = (day.map && day.map.places) || [];
-    initPlaceMap(mapBox, places, '当日路线（地图接入后显示可视化路线）');
+    mapBox.dataset.places = JSON.stringify(places);
+    mapBox.dataset.note = '当日路线（地图接入后显示可视化路线）';
+    mapBox.dataset.loaded = 'false';
 
     return card;
   }
@@ -236,20 +239,22 @@
       summary.textContent = trip.overview.routeSummary;
     }
 
-    // 全程路线图：住宿点顺序连线
-    const routeMapBox = document.getElementById('route-map');
-    const lodgingPlaces = [];
+    // 全程路线图：住宿点顺序连线（延迟加载，避免和日卡地图同时初始化）
+    var routeMapBox = document.getElementById('route-map');
+    var lodgingPlaces = [];
     trip.days.forEach(function (d) {
       if (d.lodging && d.lodging.location) {
         lodgingPlaces.push({ name: 'D' + d.dayIndex + ' ' + d.lodging.city, type: 'lodging', location: d.lodging.location, note: d.lodging.hotel });
       } else if (d.map && d.map.places && d.map.places.length) {
-        const last = d.map.places[d.map.places.length - 1];
+        var last = d.map.places[d.map.places.length - 1];
         if (last.location && last.type === 'lodging') {
           lodgingPlaces.push({ name: 'D' + d.dayIndex + ' ' + last.name, type: 'lodging', location: last.location });
         }
       }
     });
-    initPlaceMap(routeMapBox, lodgingPlaces, '全程路线（地图接入后显示可视化路线）');
+    setTimeout(function() {
+      initPlaceMap(routeMapBox, lodgingPlaces, '全程路线（地图接入后显示可视化路线）');
+    }, 800);
 
     // 日期条 + 日卡
     const today = todayISO();
@@ -264,6 +269,28 @@
     deck.textContent = '';
     trip.days.forEach(function (d) { deck.appendChild(buildDay(d)); });
 
+    // 延迟加载地图：先加载当前可见的，其他的等滚动时再加载
+    function loadVisibleMaps() {
+      var boxes = deck.querySelectorAll('.day-card__map[data-loaded="false"]');
+      boxes.forEach(function(box) {
+        var rect = box.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 200 && rect.bottom > -200) {
+          box.dataset.loaded = 'true';
+          try {
+            var places = JSON.parse(box.dataset.places || '[]');
+            initPlaceMap(box, places, box.dataset.note);
+          } catch(e) { /* ignore parse error */ }
+        }
+      });
+    }
+    // 初始加载可见地图
+    setTimeout(loadVisibleMaps, 100);
+    // 滚动时加载更多
+    deck.addEventListener('scroll', function() {
+      clearTimeout(deck._mapLoadTimer);
+      deck._mapLoadTimer = setTimeout(loadVisibleMaps, 150);
+    });
+
     if (todayIndex) {
       const target = deck.querySelector('.day[data-day-index="' + todayIndex + '"]');
       if (target) {
@@ -271,6 +298,8 @@
           deck.scrollLeft = target.offsetLeft - deck.offsetLeft;
           const btn = document.querySelector('.day-bar__item--today');
           if (btn) btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+          // 滚动到当前天后，加载附近地图
+          setTimeout(loadVisibleMaps, 300);
         });
       }
     }
