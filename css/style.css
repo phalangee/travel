@@ -79,6 +79,7 @@ button { font: inherit; cursor: pointer; }
 .page .footprint__map, .page .trip-head__map, .page .day-card__map {
   min-height: 200px; height: 200px; border-radius: var(--radius);
   background: #e8eef7; overflow: hidden; box-shadow: var(--shadow);
+  position: relative; /* 「高德App打开」按钮 absolute 定位的锚点 */
 }
 .footprint__fallback { display: flex; flex-wrap: wrap; gap: 8px; }
 .footprint-chip {

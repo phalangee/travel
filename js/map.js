@@ -254,10 +254,12 @@ function drawDrivingRoute(map, pts) {
  * 优先级低（rank 大）的标签，缩放后空间足够时自动重新显示，
  * 解决多个标记名互相遮盖的问题。短名优先（shortName），无则用全名。 */
 function applyPlacesToMap(map, pts, drawPath) {
+  // collision:true 仅让文字标签在重叠时自动隐藏，图标始终显示；
+  // 不能开 allowCollision（图标也会互相碰撞隐藏，小视野下会全部消失）
   var labelsLayer = new AMap.LabelsLayer({
     zooms: [3, 20],
     collision: true,
-    allowCollision: true
+    allowCollision: false
   });
   map.add(labelsLayer);
   pts.forEach(function (p, i) {
