@@ -22,17 +22,17 @@ function staticMapUrl(places, width, height) {
 
   pts.forEach(function (p, i) {
     var color = (PLACE_TYPE[p.type] || PLACE_TYPE.scenic).color.replace('#', '0x');
-    markers.push('mid,' + color + ':' + (i + 1) + ':' + p.location[0] + ',' + p.location[1]);
+    markers.push('mid,' + color + ',' + (i + 1) + ':' + p.location[0] + ',' + p.location[1]);
     path.push(p.location[0] + ',' + p.location[1]);
   });
 
   var url = 'https://restapi.amap.com/v3/staticmap?' +
     'key=' + encodeURIComponent(CONFIG.amapKey) +
     '&size=' + w + '*' + h +
-    '&markers=' + encodeURIComponent(markers.join('|'));
+    '&markers=' + markers.join('|');
 
   if (path.length > 1) {
-    url += '&paths=' + encodeURIComponent('2,0x2563eb,1,,:|' + path.join(';'));
+    url += '&paths=' + '2,0x2563eb,1,,:,' + path.join(';');
   }
 
   return url;
