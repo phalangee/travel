@@ -59,8 +59,7 @@
     mapBox.setAttribute('role', 'img');
     mapBox.setAttribute('aria-label', 'D' + day.dayIndex + ' 路线图');
     card.appendChild(mapBox);
-    const places = (day.map && day.map.places) || [];
-    initPlaceMap(mapBox, places, '当日路线');
+    // 日卡地图改由 initDeckMaps 统一管理（共享 1 个实例，见 map.js）
 
     return card;
   }
@@ -275,6 +274,14 @@
     const deck = document.getElementById('day-deck');
     deck.textContent = '';
     trip.days.forEach(function (d) { deck.appendChild(buildDay(d)); });
+
+    // 日卡地图：全部卡共用 1 个地图实例，停稳在哪张卡就展示哪张的途经点
+    const mapSpecs = [];
+    trip.days.forEach(function (d) {
+      const box = deck.querySelector('.day[data-day-index="' + d.dayIndex + '"] .day-card__map');
+      if (box) mapSpecs.push({ container: box, places: (d.map && d.map.places) || [], note: '当日路线' });
+    });
+    initDeckMaps(mapSpecs);
 
     // 恢复上次浏览位置：页面若因崩溃被浏览器自动重载，回到原来的卡而不是第 1 张
     var scrollKey = 'travel-h5-scroll:' + id;

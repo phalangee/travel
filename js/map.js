@@ -169,6 +169,132 @@ function renderLoading(container) {
   container.appendChild(p);
 }
 
+/* ---------- 覆盖物绘制（标记 + 可选折线 + 自动视野） ---------- */
+function applyPlacesToMap(map, pts, drawPath) {
+  pts.forEach(function (p, i) {
+    map.add(new AMap.Marker({
+      position: p.location,
+      title: p.name,
+      label: {
+        content: String(i + 1),
+        offset: new AMap.Pixel(0, 0),
+        direction: 'bottom'
+      }
+    }));
+  });
+  if (drawPath && pts.length > 1) {
+    map.add(new AMap.Polyline({
+      path: pts.map(function (p) { return p.location; }),
+      strokeColor: '#3b82f6',
+      strokeWeight: 3,
+      strokeOpacity: 0.9,
+      strokeStyle: 'solid',
+      showDir: true
+    }));
+  }
+  map.setFitView(null, false, [40, 40, 40, 40]);
+}
+
+/* ---------- 日程卡共享地图：整页仅 1 个实例 ----------
+ * 高德 2.0 每个实例独占 WebGL 上下文，且 destroy() 后上下文由浏览器
+ * 惰性回收——按"每卡一图"方案，浏览到第 N 张卡就累计创建过 N 个
+ * 上下文，真机滑到 8~9 张即耗尽，渲染进程崩溃（自动刷新/闪退）。
+ * 方案：全部日程卡共用一个地图实例，滑动停稳后把宿主节点"搬家"到
+ * 当前卡的地图框，只重设覆盖物；页面终生最多 2 个实例
+ * （顶部全程路线图 + 本共享图）。非当前卡显示降级地点条。 */
+var sharedDeckMap = null; // { host, map, owner }
+
+function initDeckMaps(specs) {
+  // specs: [{ container, places, note }]
+  var withPts = [];
+  specs.forEach(function (s) {
+    var pts = (s.places || []).filter(function (p) { return p.location; });
+    if (pts.length) withPts.push({ container: s.container, places: s.places, note: s.note || '', pts: pts });
+    else renderFallback(s.container, s.places, s.note);
+  });
+  if (!withPts.length) return;
+
+  var deck = withPts[0].container.closest('.day-deck');
+  if (!deck) { // 找不到横向卡槽（理论不会发生），退回逐卡模式
+    withPts.forEach(function (s) { initPlaceMap(s.container, s.places, s.note, false); });
+    return;
+  }
+
+  // 滑动停稳后，把共享地图交给"可见宽度最大"的那张卡
+  function currentTarget() {
+    var best = null, bestW = -1;
+    var vr = deck.getBoundingClientRect();
+    withPts.forEach(function (s) {
+      var r = s.container.getBoundingClientRect();
+      var w = Math.min(r.right, vr.right) - Math.max(r.left, vr.left);
+      if (w > bestW) { bestW = w; best = s; }
+    });
+    return best;
+  }
+
+  function activate(spec) {
+    if (!spec) return;
+    renderLoading(spec.container);
+    loadAMap(function (AMap, err) {
+      if (!AMap) {
+        renderFallback(spec.container, spec.places, spec.note, err || '地图加载失败');
+        return;
+      }
+      try {
+        if (sharedDeckMap && sharedDeckMap.owner === spec.container) return; // 已在当前卡
+        // 原宿主卡改显降级地点条
+        if (sharedDeckMap) {
+          var prevSpec = null;
+          withPts.forEach(function (s) { if (s.container === sharedDeckMap.owner) prevSpec = s; });
+          if (prevSpec) renderFallback(prevSpec.container, prevSpec.places, prevSpec.note);
+        }
+        spec.container.textContent = '';
+        spec.container.classList.remove('map-fallback');
+
+        if (!sharedDeckMap) {
+          var host = document.createElement('div');
+          host.style.width = '100%';
+          host.style.height = '100%';
+          spec.container.appendChild(host);
+          var map = new AMap.Map(host, {
+            zoom: 11,
+            viewMode: '2D',
+            dragEnable: true,
+            zoomEnable: true,
+            touchZoom: true,
+            doubleClickZoom: true,
+            scrollWheel: false // 防止页面滚动时误触地图缩放
+          });
+          sharedDeckMap = { host: host, map: map, owner: spec.container };
+          registerMap(host, map);
+          var resizeTimer;
+          window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () { map.resize(); }, 200);
+          });
+        } else {
+          spec.container.appendChild(sharedDeckMap.host); // DOM 节点搬家，实例与上下文不变
+          sharedDeckMap.owner = spec.container;
+          sharedDeckMap.map.clearMap();
+        }
+        applyPlacesToMap(sharedDeckMap.map, spec.pts, false);
+        sharedDeckMap.map.resize();
+      } catch (e) {
+        console.error('[Map] 共享地图切换失败:', e);
+        renderFallback(spec.container, spec.places, spec.note, '地图初始化失败');
+      }
+    });
+  }
+
+  var settleTimer = null;
+  function onScroll() {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(function () { activate(currentTarget()); }, 500);
+  }
+  deck.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // 初次进入视口即定位
+}
+
 /* ---------- 创建动态地图 ---------- */
 function createDynamicMap(container, places, note, drawPath) {
   renderLoading(container);
@@ -210,35 +336,8 @@ function createDynamicMap(container, places, note, drawPath) {
         scrollWheel: false // 防止页面滚动时误触地图缩放
       });
 
-      // 添加标记
-      pts.forEach(function (p, i) {
-        var marker = new AMap.Marker({
-          position: p.location,
-          title: p.name,
-          label: {
-            content: String(i + 1),
-            offset: new AMap.Pixel(0, 0),
-            direction: 'bottom'
-          }
-        });
-        map.add(marker);
-      });
-
-      // 添加折线
-      if (drawPath && pts.length > 1) {
-        var pathLine = new AMap.Polyline({
-          path: pts.map(function (p) { return p.location; }),
-          strokeColor: '#3b82f6',
-          strokeWeight: 3,
-          strokeOpacity: 0.9,
-          strokeStyle: 'solid',
-          showDir: true
-        });
-        map.add(pathLine);
-      }
-
-      // 自动调整视野包含所有标记
-      map.setFitView(null, false, [40, 40, 40, 40]);
+      // 添加标记、折线并自动调整视野
+      applyPlacesToMap(map, pts, drawPath);
 
       // 注册到活跃列表
       registerMap(container, map);
