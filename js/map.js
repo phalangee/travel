@@ -69,17 +69,24 @@ function failAll(msg) {
   amapCallbacks = [];
 }
 
-/* ---------- 地图实例管理（并发控制：最多 2 个） ---------- */
+/* ---------- 地图实例管理（并发控制：最多 4 个） ---------- */
 var activeMaps = []; // [{ container, map }]
-var MAX_CONCURRENT_MAPS = 2;
+var MAX_CONCURRENT_MAPS = 4;
 
 function registerMap(container, map) {
-  // 如果超出限制，销毁最早的
+  // 如果超出限制，销毁最早的（但保留全程路线图，因为它最重要）
   while (activeMaps.length >= MAX_CONCURRENT_MAPS) {
     var oldest = activeMaps.shift();
     if (oldest && oldest.map) {
-      try { oldest.map.destroy(); } catch (e) { /* ignore */ }
-      if (oldest.container) oldest.container.innerHTML = '';
+      // 如果 oldest 是全程路线图，把它放回去，销毁下一个
+      if (oldest.container && oldest.container.id === 'route-map') {
+        activeMaps.unshift(oldest);
+        oldest = activeMaps.shift();
+      }
+      if (oldest && oldest.map) {
+        try { oldest.map.destroy(); } catch (e) { /* ignore */ }
+        if (oldest.container) oldest.container.innerHTML = '';
+      }
     }
   }
   activeMaps.push({ container: container, map: map });
