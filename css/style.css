@@ -75,7 +75,7 @@ button { font: inherit; cursor: pointer; }
 
 /* ---------- 主页：足迹 ---------- */
 .footprint__map, .trip-head__map, .day-card__map {
-  min-height: 200px; border-radius: var(--radius);
+  min-height: 200px; height: 200px; border-radius: var(--radius);
   background: #e8eef7; overflow: hidden; box-shadow: var(--shadow);
 }
 .footprint__fallback { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -105,7 +105,7 @@ button { font: inherit; cursor: pointer; }
 /* ---------- 行程页头部 ---------- */
 .trip-head__title { font-size: 22px; }
 .trip-head__meta { color: var(--text-light); font-size: 14px; margin: 2px 0 10px; }
-.trip-head__map { min-height: 230px; }
+.trip-head__map { min-height: 230px; height: 230px; }
 .trip-head__summary { font-size: 14px; color: var(--text-light); margin: 8px 2px 0; }
 
 /* ---------- 日期条 ---------- */
@@ -149,7 +149,7 @@ button { font: inherit; cursor: pointer; }
 .day-card__info { list-style: none; }
 .day-card__info-item { font-size: 15px; margin: 5px 0; }
 .day-card__info-item--hl { color: #b45309; }
-.day-card__map { min-height: 180px; margin-top: 12px; }
+.day-card__map { min-height: 180px; height: 180px; margin-top: 12px; }
 
 /* Tab */
 .day-card__tabs { margin-top: 14px; }
