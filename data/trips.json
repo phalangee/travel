@@ -1,0 +1,14 @@
+{
+  "trips": [
+    {
+      "id": "xinjiang-2026",
+      "title": "新疆北疆自驾",
+      "subtitle": "带娃的秋日北疆环线",
+      "region": "新疆",
+      "startDate": "2026-09-23",
+      "endDate": "2026-10-05",
+      "spotlight": [87.617, 43.792],
+      "cover": null
+    }
+  ]
+}

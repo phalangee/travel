@@ -1,0 +1,218 @@
+/* ========== 基础与布局（移动优先） ========== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue: #2563eb;
+  --blue-dark: #1d4ed8;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --gray: #6b7280;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --radius: 14px;
+  --shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+a { color: var(--blue); text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* ---------- 顶栏 ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: linear-gradient(135deg, var(--blue), #3b82f6);
+  color: #fff;
+  padding: calc(env(safe-area-inset-top) + 10px) 16px 10px;
+  box-shadow: var(--shadow);
+}
+.site-header__link { color: #fff; font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.site-header__icon { width: 22px; height: 22px; }
+.site-header__back { font-size: 22px; line-height: 1; margin-right: 2px; }
+
+/* ---------- 页面容器：手机全宽，桌面限宽 ---------- */
+.page { max-width: 720px; margin: 0 auto; padding: 14px 14px 40px; }
+
+.page__section-title, .footprint__title, .trip-list__title {
+  font-size: 15px; color: var(--text-light); font-weight: 600;
+  margin: 18px 2px 8px; letter-spacing: .05em;
+}
+
+/* ---------- 通用组件 ---------- */
+.chip {
+  display: inline-block; font-size: 12px; line-height: 1;
+  padding: 5px 9px; border-radius: 999px; font-weight: 600;
+  background: #e5e7eb; color: var(--text-light); vertical-align: middle;
+}
+.chip--planned { background: #dbeafe; color: var(--blue-dark); }
+.chip--ongoing { background: #dcfce7; color: #15803d; }
+.chip--done { background: #e5e7eb; color: var(--gray); }
+.chip--today { background: var(--amber); color: #fff; }
+.chip--strength-easy { background: #dcfce7; color: #15803d; }
+.chip--strength-medium { background: #fef3c7; color: #b45309; }
+.chip--strength-hard { background: #fee2e2; color: #b91c1c; }
+.chip--soft { background: #f3f4f6; color: var(--gray); }
+.chip--meal { background: #fee2e2; color: #b91c1c; }
+
+.empty-hint { color: var(--text-light); font-size: 15px; padding: 24px 4px; text-align: center; }
+
+/* ---------- 信息块（列表小节） ---------- */
+.block { background: var(--card); border-radius: var(--radius); padding: 14px 16px; margin-top: 12px; box-shadow: var(--shadow); }
+.block__title { font-size: 15px; margin-bottom: 8px; }
+.block__list { padding-left: 1.2em; }
+.block__item { font-size: 15px; margin: 4px 0; }
+
+/* ---------- 主页：足迹 ---------- */
+.footprint__map, .trip-head__map, .day-card__map {
+  min-height: 200px; border-radius: var(--radius);
+  background: #e8eef7; overflow: hidden; box-shadow: var(--shadow);
+}
+.footprint__fallback { display: flex; flex-wrap: wrap; gap: 8px; }
+.footprint-chip {
+  background: var(--card); border: 1px solid #dbeafe; color: var(--blue-dark);
+  padding: 8px 12px; border-radius: 999px; font-size: 14px; box-shadow: var(--shadow);
+}
+
+/* ---------- 主页：旅行卡 ---------- */
+.trip-cards { display: grid; gap: 14px; }
+.trip-card {
+  display: block; background: var(--card); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow); transition: transform .15s;
+}
+.trip-card:active { transform: scale(.985); }
+.trip-card__cover { height: 130px; background: linear-gradient(135deg, #3b82f6, #60a5fa); position: relative; }
+.trip-card__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.trip-card__cover-placeholder {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.9); font-size: 26px; font-weight: 700; letter-spacing: .2em;
+}
+.trip-card__body { padding: 12px 16px 14px; }
+.trip-card__title { font-size: 18px; margin-bottom: 2px; }
+.trip-card__meta { font-size: 14px; color: var(--text-light); }
+.trip-card__tags { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- 行程页头部 ---------- */
+.trip-head__title { font-size: 22px; }
+.trip-head__meta { color: var(--text-light); font-size: 14px; margin: 2px 0 10px; }
+.trip-head__map { min-height: 230px; }
+.trip-head__summary { font-size: 14px; color: var(--text-light); margin: 8px 2px 0; }
+
+/* ---------- 日期条 ---------- */
+.day-bar {
+  display: flex; gap: 6px; overflow-x: auto; margin: 14px -14px 10px; padding: 4px 14px;
+  scrollbar-width: none;
+}
+.day-bar::-webkit-scrollbar { display: none; }
+.day-bar__item {
+  flex: 0 0 auto; min-width: 56px; min-height: 54px;
+  background: var(--card); border: 1px solid transparent; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  color: var(--text); box-shadow: var(--shadow);
+}
+.day-bar__d { font-size: 15px; font-weight: 700; }
+.day-bar__date { font-size: 12px; color: var(--text-light); }
+.day-bar__today { font-size: 10px; color: #fff; background: var(--amber); border-radius: 999px; padding: 1px 6px; }
+.day-bar__item--today { border-color: var(--amber); background: #fffbeb; }
+
+/* ---------- 按天划卡（scroll-snap） ---------- */
+.day-deck {
+  display: flex; gap: 14px; overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: 0 -14px; padding: 4px 14px 24px;
+  scrollbar-width: none;
+}
+.day-deck::-webkit-scrollbar { display: none; }
+.day { flex: 0 0 100%; scroll-snap-align: start; }
+@media (min-width: 480px) { .day { flex: 0 0 92%; } }
+
+.day-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 16px 18px; }
+
+/* 日总览卡 */
+.day-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.day-card__title { font-size: 18px; }
+.day-card__info { list-style: none; }
+.day-card__info-item { font-size: 15px; margin: 5px 0; }
+.day-card__info-item--hl { color: #b45309; }
+.day-card__map { min-height: 180px; margin-top: 12px; }
+
+/* Tab */
+.day-card__tabs { margin-top: 14px; }
+.tabs { display: flex; gap: 8px; border-bottom: 1px solid #e5e7eb; }
+.tabs__btn {
+  flex: 1; min-height: 44px; background: none; border: none;
+  font-size: 15px; color: var(--text-light); border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.tabs__btn--active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 700; }
+.tab-panels { padding-top: 4px; }
+.tab-panel--hidden { display: none; }
+
+/* 时间轴 */
+.timeline { list-style: none; margin-top: 10px; }
+.timeline__item { display: flex; gap: 12px; position: relative; padding-bottom: 16px; }
+.timeline__item::before {
+  content: ''; position: absolute; left: 41px; top: 26px; bottom: 0; width: 2px; background: #e5e7eb;
+}
+.timeline__item:last-child::before { display: none; }
+.timeline__time { flex: 0 0 44px; font-size: 14px; font-weight: 700; color: var(--blue-dark); padding-top: 2px; }
+.timeline__body { flex: 1; background: #f8fafc; border-radius: 10px; padding: 10px 12px; }
+.timeline__title { font-size: 15px; font-weight: 600; }
+.timeline__detail { font-size: 14px; color: var(--text-light); margin-top: 2px; }
+
+/* 美食 */
+.food-list { margin-top: 10px; display: grid; gap: 10px; }
+.food-item { background: #f8fafc; border-radius: 10px; padding: 10px 12px; }
+.food-item__head { display: flex; align-items: center; gap: 8px; }
+.food-item__title { font-weight: 600; font-size: 15px; }
+.food-item__detail { font-size: 14px; color: var(--text-light); margin-top: 2px; }
+.food-item__search { display: inline-block; margin-top: 6px; font-size: 14px; }
+
+/* ---------- 地图：降级地点条 ---------- */
+.map-fallback { padding: 12px; }
+.map-fallback__note { font-size: 12px; color: var(--gray); margin-bottom: 8px; text-align: center; }
+.map-fallback__list { list-style: none; }
+.map-fallback__item { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.map-fallback__name { flex: 1; font-size: 14px; }
+.map-fallback__link { font-size: 13px; }
+
+.pin {
+  flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 12px; font-weight: 700;
+}
+.pin--lodging { background: var(--blue); }
+.pin--scenic { background: var(--amber); }
+.pin--food { background: var(--red); }
+.pin--transfer { background: var(--gray); }
+
+/* ---------- 高德覆盖物 ---------- */
+.amap-container { width: 100%; height: 100%; min-height: inherit; }
+.amap-pin {
+  width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 12px; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.amap-iw { max-width: 220px; font-size: 13px; }
+.amap-iw__name { font-weight: 700; font-size: 14px; }
+.amap-iw__tag { font-weight: 600; margin: 2px 0; }
+.amap-iw__addr { color: var(--gray); margin-bottom: 6px; }
+.amap-iw__btn {
+  display: inline-block; background: var(--blue); color: #fff;
+  padding: 6px 12px; border-radius: 8px; font-size: 13px;
+}
+
+/* ---------- 桌面 ---------- */
+@media (min-width: 768px) {
+  body { font-size: 16.5px; }
+  .day-bar, .day-deck { margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+}

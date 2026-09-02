@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#2563eb">
+  <title>行程 · 我的旅行</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-header__link site-header__link--back" href="index.html">
+      <span class="site-header__back" aria-hidden="true">‹</span>
+      <span id="trip-title-inline">行程</span>
+    </a>
+  </header>
+
+  <main class="page page--trip">
+    <section class="trip-head">
+      <h1 id="trip-title" class="trip-head__title">加载中…</h1>
+      <p id="trip-meta" class="trip-head__meta"></p>
+      <div id="route-map" class="trip-head__map" aria-label="全程路线图"></div>
+      <p id="route-summary" class="trip-head__summary"></p>
+    </section>
+
+    <nav id="day-bar" class="day-bar" aria-label="按天切换"></nav>
+
+    <div id="day-deck" class="day-deck"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/trip.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register('sw.js').catch(function (e) {
+        console.warn('SW 注册失败（不影响使用）:', e);
+      });
+    }
+  </script>
+</body>
+</html>

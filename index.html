@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#2563eb">
+  <title>我的旅行 · 行程册</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-header__link" href="index.html">
+      <img class="site-header__icon" src="assets/icon.svg" alt="">
+      <span>我的旅行</span>
+    </a>
+  </header>
+
+  <main class="page page--home">
+    <section class="footprint">
+      <h2 class="footprint__title">足迹地图</h2>
+      <div id="footprint-map" class="footprint__map" aria-label="足迹地图"></div>
+      <div id="footprint-fallback" class="footprint__fallback" hidden></div>
+    </section>
+
+    <section class="trip-list">
+      <h2 class="trip-list__title">我的行程</h2>
+      <div id="trip-cards" class="trip-cards" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/home.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register('sw.js').catch(function (e) {
+        console.warn('SW 注册失败（不影响使用）:', e);
+      });
+    }
+  </script>
+</body>
+</html>
