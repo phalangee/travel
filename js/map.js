@@ -39,10 +39,14 @@ function staticMapUrl(places, width, height) {
 }
 
 /* ---------- 降级渲染：有序地点条 ---------- */
-function renderFallback(container, places, note) {
+function renderFallback(container, places, note, failMsg) {
   container.textContent = '';
   container.classList.add('map-fallback');
-  if (note) container.appendChild(el('p', 'map-fallback__note', note));
+  if (failMsg) {
+    container.appendChild(el('p', 'map-fallback__note', failMsg));
+  } else if (note) {
+    container.appendChild(el('p', 'map-fallback__note', note));
+  }
   var list = el('ol', 'map-fallback__list');
   (places || []).forEach(function (p, i) {
     var li = el('li', 'map-fallback__item');
@@ -62,6 +66,15 @@ function renderFallback(container, places, note) {
   container.appendChild(list);
 }
 
+/* ---------- 加载提示 ---------- */
+function renderLoading(container) {
+  container.textContent = '';
+  container.classList.add('map-fallback');
+  var p = el('p', 'map-fallback__note', '🗺️ 地图加载中…');
+  p.style.padding = '40px 0';
+  container.appendChild(p);
+}
+
 /* ---------- 统一入口：静态地图 + 降级 ---------- */
 function initPlaceMap(container, places, note) {
   if (!container) return;
@@ -72,8 +85,11 @@ function initPlaceMap(container, places, note) {
     return;
   }
 
+  renderLoading(container);
+
   // 尝试加载静态地图图片
   var img = new Image();
+  img.crossOrigin = 'anonymous';
   img.className = 'static-map-img';
   img.style.width = '100%';
   img.style.height = '100%';
@@ -86,16 +102,17 @@ function initPlaceMap(container, places, note) {
     container.appendChild(img);
   };
   img.onerror = function() {
-    renderFallback(container, places, note);
+    console.warn('地图图片加载失败，URL:', url);
+    renderFallback(container, places, note, '地图加载失败，显示地点列表');
   };
   img.src = url;
 
-  // 超时降级
+  // 超时降级（手机网络慢，延长到 8 秒）
   setTimeout(function() {
     if (!container.querySelector('img')) {
-      renderFallback(container, places, note);
+      renderFallback(container, places, note, '地图加载超时，显示地点列表');
     }
-  }, 3000);
+  }, 8000);
 }
 
 /* 主页足迹图 */
@@ -106,7 +123,11 @@ function renderFootprintMap(container, spots) {
     container.hidden = true;
     return;
   }
+
+  renderLoading(container);
+
   var img = new Image();
+  img.crossOrigin = 'anonymous';
   img.className = 'static-map-img';
   img.style.width = '100%';
   img.style.height = '100%';
@@ -118,7 +139,15 @@ function renderFootprintMap(container, spots) {
     container.appendChild(img);
   };
   img.onerror = function() {
+    console.warn('足迹地图加载失败，URL:', url);
     container.hidden = true;
   };
   img.src = url;
+
+  // 超时隐藏
+  setTimeout(function() {
+    if (!container.querySelector('img')) {
+      container.hidden = true;
+    }
+  }, 8000);
 }
