@@ -289,7 +289,7 @@ function initDeckMaps(specs) {
   var settleTimer = null;
   function onScroll() {
     clearTimeout(settleTimer);
-    settleTimer = setTimeout(function () { activate(currentTarget()); }, 500);
+    settleTimer = setTimeout(function () { activate(currentTarget()); }, 300);
   }
   deck.addEventListener('scroll', onScroll, { passive: true });
   onScroll(); // 初次进入视口即定位
@@ -402,6 +402,16 @@ function getMapObserver() {
   }, { rootMargin: '50px 0px', threshold: 0 });
   return mapObserver;
 }
+
+/* ---------- 离开页面时主动销毁全部实例 ----------
+ * 同源导航（首页→行程页）时，旧页的 WebGL 上下文不会立刻释放，而新页
+ * 马上又要创建自己的实例，低内存手机上短时叠加 3 个上下文可能触发
+ * 渲染进程静默崩溃并自动刷新。pagehide 时主动 destroy，给新页腾出资源。 */
+window.addEventListener('pagehide', function () {
+  activeMaps.slice().forEach(destroyMapRec);
+  activeMaps.length = 0;
+  sharedDeckMap = null; // 共享地图随宿主 DOM 已被丢弃，仅清引用
+});
 
 /* ---------- 统一入口：动态地图 ----------
  * @param {boolean} drawPath - 是否在标记点之间画折线
