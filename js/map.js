@@ -45,10 +45,12 @@ function loadAMap(callback) {
       key: CONFIG.amapKey,
       version: '2.0',
       plugins: ['AMap.Scale', 'AMap.ToolBar']
-    }).then(function (AMap) {
+    }).then(function () {
+      // AMapLoader.load 返回的是模块对象，不是 AMap 本身
+      // 加载完成后 window.AMap 已被设置，使用全局的 window.AMap
       amapReady = true;
       amapLoading = false;
-      amapCallbacks.forEach(function (cb) { cb(AMap); });
+      amapCallbacks.forEach(function (cb) { cb(window.AMap); });
       amapCallbacks = [];
     }).catch(function (err) {
       failAll('AMap 加载失败: ' + (err && err.message ? err.message : '未知错误'));
