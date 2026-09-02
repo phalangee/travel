@@ -250,20 +250,66 @@ function drawDrivingRoute(map, pts) {
   }
 }
 
+/* 标记图层：带碰撞检测的 LabelMarker，标签互相重叠时自动隐藏
+ * 优先级低（rank 大）的标签，缩放后空间足够时自动重新显示，
+ * 解决多个标记名互相遮盖的问题。短名优先（shortName），无则用全名。 */
 function applyPlacesToMap(map, pts, drawPath) {
+  var labelsLayer = new AMap.LabelsLayer({
+    zooms: [3, 20],
+    collision: true,
+    allowCollision: true
+  });
+  map.add(labelsLayer);
   pts.forEach(function (p, i) {
-    map.add(new AMap.Marker({
+    var type = PLACE_TYPE[p.type || 'scenic'] || PLACE_TYPE.scenic;
+    var marker = new AMap.LabelMarker({
       position: p.location,
-      title: p.name,
-      label: {
-        content: (i + 1) + '. ' + p.name,
-        offset: new AMap.Pixel(0, -4),
-        direction: 'top'
+      rank: 99 - Math.min(i, 90), // 靠前的途经点优先保留标签
+      icon: {
+        image: type.icon,
+        size: [19, 31],
+        anchor: 'bottom-center'
+      },
+      text: {
+        content: (i + 1) + '. ' + (p.shortName || p.name),
+        direction: 'top',
+        offset: [0, -4],
+        fontSize: 12,
+        fillColor: '#1f2937',
+        strokeColor: '#ffffff',
+        strokeWidth: 2
       }
-    }));
+    });
+    labelsLayer.add(marker);
   });
   if (drawPath && pts.length > 1) drawDrivingRoute(map, pts);
   map.setFitView(null, false, [40, 40, 40, 40]);
+}
+
+/* ---------- 跳转高德 App：navigation URI（from/to/via，坐标高德系） ---------- */
+function buildAmapNavUrl(pts) {
+  if (!pts || pts.length < 2) return null;
+  var fmt = function (p) { return p.location.join(',') + ',' + encodeURIComponent(p.shortName || p.name); };
+  var url = 'https://uri.amap.com/navigation?from=' + fmt(pts[0]) +
+    '&to=' + fmt(pts[pts.length - 1]);
+  var via = pts.slice(1, -1).slice(0, 16); // via 上限 16 个
+  via.forEach(function (p) { url += '&via=' + fmt(p); });
+  return url + '&mode=car&coordinate=gaode&callnative=1&src=mytravel';
+}
+
+/* 在地图右上角放"高德App打开"按钮（整块地图可拖动，用按钮而不是全图点击） */
+function addOpenInAmapButton(container, pts) {
+  if (container.__amapBtn) container.__amapBtn.remove();
+  var url = buildAmapNavUrl(pts);
+  if (!url) return;
+  var a = document.createElement('a');
+  a.className = 'map-open-amap';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = '高德App打开 ↗';
+  container.appendChild(a);
+  container.__amapBtn = a;
 }
 
 /* ---------- 日程卡共享地图：整页仅 1 个实例 ----------
@@ -349,6 +395,7 @@ function initDeckMaps(specs) {
           sharedDeckMap.map.clearMap();
         }
         applyPlacesToMap(sharedDeckMap.map, spec.pts, true);
+        addOpenInAmapButton(spec.container, spec.pts);
         sharedDeckMap.map.resize();
       } catch (e) {
         console.error('[Map] 共享地图切换失败:', e);
@@ -409,6 +456,7 @@ function createDynamicMap(container, places, note, drawPath) {
 
       // 添加标记、折线并自动调整视野
       applyPlacesToMap(map, pts, drawPath);
+      addOpenInAmapButton(container, pts);
 
       // 注册到活跃列表
       registerMap(container, map);
