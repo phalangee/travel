@@ -245,3 +245,7 @@ button { font: inherit; cursor: pointer; }
   padding: 4px 10px; font-size: 12px; font-weight: 600;
   text-decoration: none; box-shadow: 0 1px 3px rgba(0,0,0,.15);
 }
+
+.map-jump-links { position: absolute; top: 8px; right: 8px; z-index: 20; display: flex; gap: 6px; }
+.map-jump-links .map-open-amap { position: static; }
+.map-open-amap--primary { background: #2563eb; color: #fff; border-color: #2563eb; }

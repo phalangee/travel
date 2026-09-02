@@ -303,11 +303,29 @@ function applyPlacesToMap(map, pts, drawPath) {
   map.setFitView(null, false, [40, 40, 40, 40]);
 }
 
-/* ---------- 跳转高德 App：多点标注 URI（全部点带名字，坐标高德系） ----------
- * 不用 navigation：官方 URI 规范 via 最多只支持 1 个途经点，
- * 跳过去只能看到起终点+1 个途经点；marker 的 markers 参数
- * 可一次展示全部点（上限 10 个，超出时等距采样保留首尾）。 */
-function buildAmapNavUrl(pts) {
+/* ---------- 跳转高德 ----------
+ * 两类链接，各有分工：
+ * 1) 路线页 ditu.amap.com/dir：from/to + via[n][lnglat]/[name] 结构化参数，
+ *    支持多途经点（实测 4 个 via 全部生效），落地即为完整驾车路线，
+ *    移动端网页内可一键唤起 App。
+ * 2) 多点标注 uri.amap.com/marker：markers 上限 10 个（超出等距采样），
+ *    callnative=1 直接唤起 App 展示全部点位。注意不能用
+ *    uri.amap.com/navigation——官方规范 via 最多只支持 1 个途经点。 */
+function buildAmapRouteUrl(pts) {
+  if (!pts || pts.length < 2) return null;
+  var name = function (p) { return encodeURIComponent(p.shortName || p.name); };
+  var url = 'https://ditu.amap.com/dir?from[lnglat]=' + pts[0].location.join(',') +
+    '&from[name]=' + name(pts[0]) +
+    '&to[lnglat]=' + pts[pts.length - 1].location.join(',') +
+    '&to[name]=' + name(pts[pts.length - 1]);
+  pts.slice(1, -1).forEach(function (p, i) {
+    url += '&via[' + i + '][lnglat]=' + p.location.join(',') +
+      '&via[' + i + '][name]=' + name(p);
+  });
+  return url + '&policy=0';
+}
+
+function buildAmapMarkerUrl(pts) {
   if (!pts || pts.length < 2) return null;
   var shown = pts;
   if (pts.length > 10) {
@@ -322,19 +340,28 @@ function buildAmapNavUrl(pts) {
     '&coordinate=gaode&callnative=1&src=mytravel';
 }
 
-/* 在地图右上角放"高德App打开"按钮（整块地图可拖动，用按钮而不是全图点击） */
+/* 地图右上角放「路线」与「App」两个按钮（地图本身可拖动，用按钮而非全图点击） */
 function addOpenInAmapButton(container, pts) {
   if (container.__amapBtn) container.__amapBtn.remove();
-  var url = buildAmapNavUrl(pts);
-  if (!url) return;
-  var a = document.createElement('a');
-  a.className = 'map-open-amap';
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  a.textContent = '高德App打开 ↗';
-  container.appendChild(a);
-  container.__amapBtn = a;
+  var routeUrl = buildAmapRouteUrl(pts);
+  var markerUrl = buildAmapMarkerUrl(pts);
+  if (!routeUrl) return;
+  var wrap = document.createElement('span');
+  wrap.className = 'map-jump-links';
+  var a1 = document.createElement('a');
+  a1.className = 'map-open-amap map-open-amap--primary';
+  a1.href = routeUrl; a1.target = '_blank'; a1.rel = 'noopener';
+  a1.textContent = '查看路线 ↗';
+  wrap.appendChild(a1);
+  if (markerUrl) {
+    var a2 = document.createElement('a');
+    a2.className = 'map-open-amap';
+    a2.href = markerUrl; a2.target = '_blank'; a2.rel = 'noopener';
+    a2.textContent = 'App打开';
+    wrap.appendChild(a2);
+  }
+  container.appendChild(wrap);
+  container.__amapBtn = wrap;
 }
 
 /* ---------- 日程卡共享地图：整页仅 1 个实例 ----------
