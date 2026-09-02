@@ -57,36 +57,7 @@
         return { name: t.title, type: 'scenic', location: t.spotlight, note: t.region };
       });
     if (!spots.length) return;
-
-    // 延迟加载，避免与行程页地图同时初始化
-    setTimeout(function() {
-      amapLoader().then(function (AMap) {
-        mapBox.textContent = '';
-        mapBox.classList.add('amap-container');
-        var map = new AMap.Map(mapBox, { zoom: 4, center: [87.6, 43.8], viewMode: '2D' });
-        spots.forEach(function (p) {
-          var marker = new AMap.Marker({
-            position: p.location,
-            content: markerContent('📍', 'scenic'),
-            anchor: 'center',
-            title: p.name
-          });
-          marker.on('click', function () {
-            new AMap.InfoWindow({ content: infoWindowHTML(p) }).open(map, p.location);
-          });
-          map.add(marker);
-        });
-      }).catch(function () {
-        mapBox.hidden = true;
-        fallbackBox.hidden = false;
-        spots.forEach(function (p) {
-          var a = el('a', 'footprint-chip', p.name + ' ' + (p.note || ''));
-          a.href = amapMarkerUri(p.location[0], p.location[1], p.name);
-          a.target = '_blank'; a.rel = 'noopener';
-          fallbackBox.appendChild(a);
-        });
-      });
-    }, 500);
+    renderFootprintMap(mapBox, spots);
   }
 
   loadJSON('data/trips.json')

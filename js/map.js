@@ -1,4 +1,4 @@
-/* 地图模块：有高德 Key 时渲染真实地图；无 Key 或加载失败时降级为有序地点条 */
+/* 地图模块：有高德 Key 时渲染静态地图图片；无 Key 或加载失败时降级为有序地点条 */
 'use strict';
 
 const PLACE_TYPE = {
@@ -8,61 +8,35 @@ const PLACE_TYPE = {
   transfer: { label: '换乘', color: '#6b7280' }
 };
 
-let amapReady = null;
-let amapLoading = false;
+/* ---------- 静态地图图片 ---------- */
+function staticMapUrl(places, width, height) {
+  var pts = (places || []).filter(function (p) { return p.location; });
+  if (!pts.length) return null;
 
-function amapLoader() {
-  if (amapReady) return amapReady;
-  if (!CONFIG.amapKey) {
-    amapReady = Promise.reject(new Error('no-key'));
-    return amapReady;
-  }
-  if (amapLoading) {
-    return new Promise(function(resolve, reject) {
-      var check = function() {
-        if (amapReady) { amapReady.then(resolve).catch(reject); }
-        else { setTimeout(check, 100); }
-      };
-      check();
-    });
-  }
-  amapLoading = true;
+  var w = width || 600;
+  var h = height || 300;
+  var markers = [];
+  var path = [];
 
-  amapReady = new Promise(function (resolve, reject) {
-    if (CONFIG.securityJsCode) {
-      window._AMapSecurityConfig = { securityJsCode: CONFIG.securityJsCode };
-    }
-    var loader = document.createElement('script');
-    loader.src = 'https://webapi.amap.com/loader.js';
-    loader.onload = function () {
-      if (!window.AMapLoader) {
-        amapLoading = false;
-        reject(new Error('AMapLoader 未定义'));
-        return;
-      }
-      window.AMapLoader.load({
-        key: CONFIG.amapKey,
-        version: '2.0'
-      }).then(function (AMap) {
-        amapLoading = false;
-        resolve(AMap);
-      }).catch(function (err) {
-        amapLoading = false;
-        reject(new Error('高德地图加载失败: ' + (err && err.message ? err.message : '未知错误')));
-      });
-    };
-    loader.onerror = function () {
-      amapLoading = false;
-      reject(new Error('高德 Loader 加载失败'));
-    };
-    document.head.appendChild(loader);
+  pts.forEach(function (p, i) {
+    var color = (PLACE_TYPE[p.type] || PLACE_TYPE.scenic).color.replace('#', '0x');
+    markers.push('mid,' + color + ':' + (i + 1) + ':' + p.location[0] + ',' + p.location[1]);
+    path.push(p.location[0] + ',' + p.location[1]);
   });
-  amapReady.catch(function () {});
-  return amapReady;
+
+  var url = 'https://restapi.amap.com/v3/staticmap?' +
+    'key=' + encodeURIComponent(CONFIG.amapKey) +
+    '&size=' + w + '*' + h +
+    '&markers=' + encodeURIComponent(markers.join('|'));
+
+  if (path.length > 1) {
+    url += '&paths=' + encodeURIComponent('2,0x2563eb,1,,:|' + path.join(';'));
+  }
+
+  return url;
 }
 
 /* ---------- 降级渲染：有序地点条 ---------- */
-
 function renderFallback(container, places, note) {
   container.textContent = '';
   container.classList.add('map-fallback');
@@ -86,74 +60,63 @@ function renderFallback(container, places, note) {
   container.appendChild(list);
 }
 
-/* ---------- 真实地图 ---------- */
-
-function markerContent(idx, type) {
-  var color = (PLACE_TYPE[type] || PLACE_TYPE.scenic).color;
-  return '<div class="amap-pin" style="background:' + color + '">' + idx + '</div>';
-}
-
-function infoWindowHTML(p) {
-  var type = PLACE_TYPE[p.type] || PLACE_TYPE.scenic;
-  var html = '<div class="amap-iw"><div class="amap-iw__name">' + escapeHTML(p.name) + '</div>';
-  html += '<div class="amap-iw__tag" style="color:' + type.color + '">' + type.label + (p.note ? ' · ' + escapeHTML(p.note) : '') + '</div>';
-  if (p.address) html += '<div class="amap-iw__addr">' + escapeHTML(p.address) + '</div>';
-  if (p.location) {
-    html += '<a class="amap-iw__btn" href="' + amapNavUri(p.location[0], p.location[1], p.name) + '" target="_blank" rel="noopener">在高德中导航</a>';
-  }
-  html += '</div>';
-  return html;
-}
-
-function escapeHTML(s) {
-  return String(s).replace(/[&<>"']/g, function (c) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-  });
-}
-
-/* 通用：在 container 中画一组地点 + 顺序连线 */
-function drawPlacesMap(container, places) {
-  return amapLoader().then(function (AMap) {
-    container.textContent = '';
-    container.classList.add('amap-container');
-    var pts = (places || []).filter(function (p) { return p.location; });
-    if (!pts.length) throw new Error('no-places');
-    var map = new AMap.Map(container, {
-      zoom: 7,
-      center: pts[0].location,
-      viewMode: '2D',
-      resizeEnable: true
-    });
-    if (pts.length > 1) {
-      map.add(new AMap.Polyline({
-        path: pts.map(function (p) { return p.location; }),
-        strokeColor: '#2563eb', strokeWeight: 4, strokeOpacity: 0.8,
-        showDir: true, lineJoin: 'round'
-      }));
-    }
-    var info = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -32) });
-    pts.forEach(function (p, i) {
-      var marker = new AMap.Marker({
-        position: p.location,
-        content: markerContent(i + 1, p.type),
-        anchor: 'center',
-        title: p.name
-      });
-      marker.on('click', function () {
-        info.setContent(infoWindowHTML(p));
-        info.open(map, p.location);
-      });
-      map.add(marker);
-    });
-    map.setFitView(null, false, [48, 48, 48, 48]);
-    return map;
-  });
-}
-
-/* 日卡小地图 / 足迹图 / 全程图 统一入口：失败自动降级 */
+/* ---------- 统一入口：静态地图 + 降级 ---------- */
 function initPlaceMap(container, places, note) {
-  if (!container) return Promise.resolve();
-  return drawPlacesMap(container, places).catch(function () {
+  if (!container) return;
+
+  var url = staticMapUrl(places, 600, 300);
+  if (!url) {
     renderFallback(container, places, note);
-  });
+    return;
+  }
+
+  // 尝试加载静态地图图片
+  var img = new Image();
+  img.className = 'static-map-img';
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
+  img.style.borderRadius = 'inherit';
+  img.alt = note || '地图';
+
+  img.onload = function() {
+    container.textContent = '';
+    container.appendChild(img);
+  };
+  img.onerror = function() {
+    renderFallback(container, places, note);
+  };
+  img.src = url;
+
+  // 超时降级
+  setTimeout(function() {
+    if (!container.querySelector('img')) {
+      renderFallback(container, places, note);
+    }
+  }, 3000);
+}
+
+/* 主页足迹图 */
+function renderFootprintMap(container, spots) {
+  if (!container || !spots.length) return;
+  var url = staticMapUrl(spots, 600, 200);
+  if (!url) {
+    container.hidden = true;
+    return;
+  }
+  var img = new Image();
+  img.className = 'static-map-img';
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
+  img.style.borderRadius = 'inherit';
+  img.alt = '足迹地图';
+  img.onload = function() {
+    container.textContent = '';
+    container.appendChild(img);
+  };
+  img.onerror = function() {
+    container.hidden = true;
+  };
+  img.src = url;
 }
