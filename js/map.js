@@ -17,7 +17,7 @@ function amapLoader() {
   } else {
     amapReady = new Promise(function (resolve, reject) {
       const script = document.createElement('script');
-      script.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(CONFIG.amapKey);
+      script.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(CONFIG.amapKey) + (CONFIG.securityJsCode ? '&jscode=' + encodeURIComponent(CONFIG.securityJsCode) : '');
       script.onload = function () {
         if (window.AMap) resolve(window.AMap); else reject(new Error('AMap 未定义'));
       };
