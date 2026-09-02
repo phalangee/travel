@@ -236,19 +236,31 @@
       summary.textContent = trip.overview.routeSummary;
     }
 
-    // 全程路线图：住宿点顺序连线
+    // 全程路线图：住宿点顺序连线（最多10个点，避免高德 API 限制）
     var routeMapBox = document.getElementById('route-map');
     var lodgingPlaces = [];
+    var allLodgings = [];
     trip.days.forEach(function (d) {
       if (d.lodging && d.lodging.location) {
-        lodgingPlaces.push({ name: 'D' + d.dayIndex + ' ' + d.lodging.city, type: 'lodging', location: d.lodging.location, note: d.lodging.hotel });
+        allLodgings.push({ name: 'D' + d.dayIndex + ' ' + d.lodging.city, type: 'lodging', location: d.lodging.location, note: d.lodging.hotel });
       } else if (d.map && d.map.places && d.map.places.length) {
         var last = d.map.places[d.map.places.length - 1];
         if (last.location && last.type === 'lodging') {
-          lodgingPlaces.push({ name: 'D' + d.dayIndex + ' ' + last.name, type: 'lodging', location: last.location });
+          allLodgings.push({ name: 'D' + d.dayIndex + ' ' + last.name, type: 'lodging', location: last.location });
         }
       }
     });
+    // 如果超过10个点，采样显示（保留起点、终点和中间关键节点）
+    if (allLodgings.length > 10) {
+      var step = Math.ceil(allLodgings.length / 10);
+      allLodgings.forEach(function (p, i) {
+        if (i === 0 || i === allLodgings.length - 1 || i % step === 0) {
+          lodgingPlaces.push(p);
+        }
+      });
+    } else {
+      lodgingPlaces = allLodgings;
+    }
     initPlaceMap(routeMapBox, lodgingPlaces, '全程路线');
 
     // 日期条 + 日卡
