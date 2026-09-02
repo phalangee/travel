@@ -30,12 +30,24 @@
     </section>
   </main>
 
-  <script src="js/config.js"></script>
-  <script src="js/util.js"></script>
-  <script src="js/map.js"></script>
-  <script src="js/home.js"></script>
+  <script src="js/config.js?v=5"></script>
+  <script src="js/util.js?v=5"></script>
+  <script src="js/map.js?v=5"></script>
+  <script src="js/home.js?v=5"></script>
   <script>
-    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    // 强制清理旧 Service Worker 缓存，确保加载最新代码
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        regs.forEach(function(r) { r.unregister(); });
+      });
+      if (caches && caches.keys) {
+        caches.keys().then(function(names) {
+          names.forEach(function(n) { caches.delete(n); });
+        });
+      }
+    }
+    // 重新注册 SW（使用新缓存版本）
+    if (location.protocol.startsWith('http')) {
       navigator.serviceWorker.register('sw.js').catch(function (e) {
         console.warn('SW 注册失败（不影响使用）:', e);
       });
