@@ -269,10 +269,11 @@ function getMapObserver() {
   return mapObserver;
 }
 
-/* ---------- 统一入口：懒加载动态地图 ----------
+/* ---------- 统一入口：动态地图 ----------
  * @param {boolean} drawPath - 是否在标记点之间画折线
+ * @param {boolean} lazy - 是否使用 IntersectionObserver 懒加载（默认 true）
  */
-function initPlaceMap(container, places, note, drawPath) {
+function initPlaceMap(container, places, note, drawPath, lazy) {
   if (!container) return;
 
   var pts = (places || []).filter(function (p) { return p.location; });
@@ -288,10 +289,10 @@ function initPlaceMap(container, places, note, drawPath) {
     initialized: false
   };
 
-  if ('IntersectionObserver' in window) {
+  if (lazy !== false && 'IntersectionObserver' in window) {
     getMapObserver().observe(container);
   } else {
-    // 老浏览器直接加载
+    // 直接加载（用于全程路线图等重要地图）
     container.__mapRec.initialized = true;
     createDynamicMap(container, places, note, drawPath);
   }
