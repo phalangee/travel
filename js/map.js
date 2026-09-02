@@ -22,10 +22,12 @@ function amapLoader() {
     if (CONFIG.securityJsCode) {
       window._AMapSecurityConfig = { securityJsCode: CONFIG.securityJsCode };
     }
+    console.log('[amap] 开始加载高德地图... key=', CONFIG.amapKey ? '已设置' : '未设置');
     // 2. 加载 loader.js
     const loader = document.createElement('script');
     loader.src = 'https://webapi.amap.com/loader.js';
     loader.onload = function () {
+      console.log('[amap] loader.js 加载成功, AMapLoader=', !!window.AMapLoader);
       if (!window.AMapLoader) {
         reject(new Error('AMapLoader 未定义'));
         return;
@@ -35,15 +37,17 @@ function amapLoader() {
         key: CONFIG.amapKey,
         version: '2.0'
       }).then(function (AMap) {
+        console.log('[amap] 地图核心加载成功, AMap=', !!AMap);
         resolve(AMap);
       }).catch(function (err) {
+        console.error('[amap] 地图核心加载失败:', err);
         reject(new Error('高德地图加载失败: ' + (err && err.message ? err.message : '未知错误')));
       });
     };
     loader.onerror = function () { reject(new Error('高德 Loader 加载失败')); };
     document.head.appendChild(loader);
   });
-  amapReady.catch(function () {}); // 防止未处理 rejection
+  amapReady.catch(function (err) { console.error('[amap] amapLoader 最终失败:', err); }); // 防止未处理 rejection
   return amapReady;
 }
 
@@ -138,7 +142,9 @@ function drawPlacesMap(container, places) {
 
 /* 日卡小地图 / 足迹图 / 全程图 统一入口：失败自动降级 */
 function initPlaceMap(container, places, note) {
-  return drawPlacesMap(container, places).catch(function () {
+  console.log('[initPlaceMap] 容器=', container, '地点数=', (places || []).length);
+  return drawPlacesMap(container, places).catch(function (err) {
+    console.log('[initPlaceMap] 降级到地点条, 原因:', err && err.message);
     renderFallback(container, places, note);
   });
 }
