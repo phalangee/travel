@@ -276,7 +276,21 @@
     deck.textContent = '';
     trip.days.forEach(function (d) { deck.appendChild(buildDay(d)); });
 
-    if (todayIndex) {
+    // 恢复上次浏览位置：页面若因崩溃被浏览器自动重载，回到原来的卡而不是第 1 张
+    var scrollKey = 'travel-h5-scroll:' + id;
+    var savedScroll = null;
+    try { savedScroll = sessionStorage.getItem(scrollKey); } catch (e) { /* 隐私模式等 */ }
+    var saveTimer;
+    deck.addEventListener('scroll', function () {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () {
+        try { sessionStorage.setItem(scrollKey, String(deck.scrollLeft)); } catch (e) { /* ignore */ }
+      }, 200);
+    }, { passive: true });
+
+    if (savedScroll !== null) {
+      deck.scrollLeft = +savedScroll;
+    } else if (todayIndex) {
       const target = deck.querySelector('.day[data-day-index="' + todayIndex + '"]');
       if (target) {
         requestAnimationFrame(function () {

@@ -69,9 +69,12 @@ function failAll(msg) {
   amapCallbacks = [];
 }
 
-/* ---------- 地图实例管理（并发控制：最多 4 个） ---------- */
-var activeMaps = []; // [{ container, map }]
-var MAX_CONCURRENT_MAPS = 4;
+/* ---------- 地图实例管理（并发硬上限） ----------
+ * 手机降到 3：高德 2.0 每实例带 Web Worker + WebGL 上下文，
+ * 真机实测 4 个存活 + 滑动翻动仍可能把渲染进程撑爆。 */
+var activeMaps = []; // [{ container, map, createdAt }]
+var MAX_CONCURRENT_MAPS =
+  (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) ? 3 : 4;
 
 /* 新建地图的优先保护期：初始化是异步的，刚建就销毁会在高德内部抛
  * "Cannot read properties of undefined (reading 'getOptions')"。
@@ -82,6 +85,10 @@ var MAX_CONCURRENT_MAPS = 4;
 var MAP_EVICTION_GRACE_MS = 1500;
 
 function destroyMapRec(rec) {
+  // 先解绑 resize 监听（__mapCleanup），再销毁地图，避免对已销毁实例调 resize()
+  if (rec.container && rec.container.__mapCleanup) {
+    try { rec.container.__mapCleanup(); } catch (e) { /* ignore */ }
+  }
   try { rec.map.destroy(); } catch (e) { /* ignore */ }
   if (rec.container) {
     rec.container.innerHTML = '';
@@ -269,28 +276,27 @@ function getMapObserver() {
       if (!rec) return;
 
       if (entry.isIntersecting) {
-        // 进入视口：取消待执行的销毁，必要时初始化地图
-        clearTimeout(rec.exitTimer);
-        if (!rec.initialized) {
-          rec.initialized = true;
-          createDynamicMap(entry.target, rec.places, rec.note, rec.drawPath);
+        // 进入视口：延迟到滑动停稳再初始化（600ms 内滑走则取消）。
+        // 快速滑动（fling）中建图再销毁会持续制造/销毁 WebGL 上下文，
+        // 高德 destroy() 并不立即释放、Chrome 惰性回收，真机上很快
+        // 耗尽上下文导致渲染进程崩溃（"网页重复出现问题"后自动重载）。
+        if (!rec.initialized && !rec.initTimer) {
+          rec.initTimer = setTimeout(function () {
+            rec.initTimer = null;
+            if (!rec.initialized) {
+              rec.initialized = true;
+              createDynamicMap(entry.target, rec.places, rec.note, rec.drawPath);
+            }
+          }, 600);
         }
       } else {
-        // 离开视口：延迟销毁释放内存。
-        // 立即销毁会在快速滑动时与地图的异步初始化竞争，
-        // 触发 AMap 内部 "Cannot read properties of undefined (reading 'getOptions')"，
-        // 因此等 3 秒，若期间卡片重新进入视口则取消销毁。
-        if (rec.initialized) {
-          clearTimeout(rec.exitTimer);
-          rec.exitTimer = setTimeout(function () {
-            if (entry.target.__mapCleanup) {
-              entry.target.__mapCleanup();
-              entry.target.__mapCleanup = null;
-              rec.initialized = false;
-              entry.target.innerHTML = '';
-              entry.target.classList.remove('map-fallback');
-            }
-          }, 3000);
+        // 离开视口：只取消未执行的初始化，不销毁已建地图。
+        // 已建实例的回收完全交给 registerMap 的硬上限淘汰——
+        // 有界（≤MAX_CONCURRENT_MAPS）常驻的内存是可控的，
+        // 而"滑走即销毁、滑回重建"的翻动才是崩溃根源。
+        if (rec.initTimer) {
+          clearTimeout(rec.initTimer);
+          rec.initTimer = null;
         }
       }
     });
