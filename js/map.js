@@ -31,9 +31,8 @@ function staticMapUrl(places, width, height) {
     '&size=' + w + '*' + h +
     '&markers=' + markers.join('|');
 
-  if (path.length > 1) {
-    url += '&paths=' + '2,0x2563eb,1,,:,' + path.join(';');
-  }
+  // 注意：高德静态地图 API 同时传 markers + paths 会返回 UNKNOWN_ERROR
+  // 所以只传 markers，不画连线
 
   return url;
 }
