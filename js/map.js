@@ -11,8 +11,13 @@ const PLACE_TYPE = {
   transfer: { label: '换乘', color: '#6b7280' }
 };
 
-/* ---------- 静态地图图片 ---------- */
-function staticMapUrl(places, width, height) {
+/* ---------- 静态地图图片 ----------
+ * @param {Array} places - 地点数组
+ * @param {number} width
+ * @param {number} height
+ * @param {boolean} drawPath - 是否在标记点之间画折线
+ */
+function staticMapUrl(places, width, height, drawPath) {
   var pts = (places || []).filter(function (p) { return p.location; });
   if (!pts.length) return null;
 
@@ -25,15 +30,20 @@ function staticMapUrl(places, width, height) {
     markers.push('mid,' + color + ',' + (i + 1) + ':' + p.location[0] + ',' + p.location[1]);
   });
 
-  var url = 'https://restapi.amap.com/v3/staticmap?' +
-    'key=' + encodeURIComponent(CONFIG.amapKey) +
-    '&size=' + w + '*' + h +
-    '&markers=' + markers.join('|');
+  var params = [
+    'key=' + encodeURIComponent(CONFIG.amapKey),
+    'size=' + w + '*' + h,
+    'markers=' + encodeURIComponent(markers.join('|'))
+  ];
 
-  // 注意：高德静态地图 API 同时传 markers + paths 会返回 UNKNOWN_ERROR
-  // 所以只传 markers，不画连线
+  // 画折线：按标记点顺序连接
+  if (drawPath && pts.length > 1) {
+    var pathPoints = pts.map(function (p) { return p.location[0] + ',' + p.location[1]; }).join(';');
+    // color=0x3b82f6(蓝色), weight=3, style=0(实线)
+    params.push('paths=' + encodeURIComponent('0x3b82f6,3,0:' + pathPoints));
+  }
 
-  return url;
+  return 'https://restapi.amap.com/v3/staticmap?' + params.join('&');
 }
 
 /* ---------- 降级渲染：有序地点条 ---------- */
@@ -140,8 +150,10 @@ function loadMapImage(container, rec) {
   }, 15000);
 }
 
-/* ---------- 统一入口：懒加载静态地图 ---------- */
-function initPlaceMap(container, places, note) {
+/* ---------- 统一入口：懒加载静态地图 ----------
+ * @param {boolean} drawPath - 是否在标记点之间画折线
+ */
+function initPlaceMap(container, places, note, drawPath) {
   if (!container) return;
 
   var pts = (places || []).filter(function (p) { return p.location; });
@@ -150,7 +162,7 @@ function initPlaceMap(container, places, note) {
     return;
   }
 
-  var url = staticMapUrl(pts, 600, 300);
+  var url = staticMapUrl(pts, 600, 300, drawPath);
   if (!url) {
     renderFallback(container, places, note);
     return;

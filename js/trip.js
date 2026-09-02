@@ -261,7 +261,7 @@
     } else {
       lodgingPlaces = allLodgings;
     }
-    initPlaceMap(routeMapBox, lodgingPlaces, '全程路线');
+    initPlaceMap(routeMapBox, lodgingPlaces, '全程路线', true);
 
     // 日期条 + 日卡
     const today = todayISO();
