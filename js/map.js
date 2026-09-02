@@ -37,10 +37,11 @@ function staticMapUrl(places, width, height, drawPath) {
   ];
 
   // 画折线：按标记点顺序连接
+  // 高德静态地图 paths 格式：weight,color,transparency,fillColor,fillOpacity:lon,lat;...
+  // 折线时 fillColor 和 fillOpacity 留空，但逗号不能省略
   if (drawPath && pts.length > 1) {
     var pathPoints = pts.map(function (p) { return p.location[0] + ',' + p.location[1]; }).join(';');
-    // color=0x3b82f6(蓝色), weight=3, style=0(实线)
-    params.push('paths=' + encodeURIComponent('0x3b82f6,3,0:' + pathPoints));
+    params.push('paths=' + encodeURIComponent('3,0x3b82f6,1,,:') + pathPoints);
   }
 
   return 'https://restapi.amap.com/v3/staticmap?' + params.join('&');
