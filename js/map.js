@@ -1,6 +1,7 @@
 /* 地图模块：高德静态地图图片（v3/staticmap）
  * 需要 Web 服务类型的 Key（与 JS API Key 不同）
- * 无 Key 或加载失败时降级为有序地点条 */
+ * 无 Key 或加载失败时降级为有序地点条
+ * 防超时策略：懒加载（IntersectionObserver）+ 失败重试 */
 'use strict';
 
 const PLACE_TYPE = {
@@ -18,12 +19,10 @@ function staticMapUrl(places, width, height) {
   var w = width || 600;
   var h = height || 300;
   var markers = [];
-  var path = [];
 
   pts.forEach(function (p, i) {
     var color = (PLACE_TYPE[p.type] || PLACE_TYPE.scenic).color.replace('#', '0x');
     markers.push('mid,' + color + ',' + (i + 1) + ':' + p.location[0] + ',' + p.location[1]);
-    path.push(p.location[0] + ',' + p.location[1]);
   });
 
   var url = 'https://restapi.amap.com/v3/staticmap?' +
@@ -74,19 +73,34 @@ function renderLoading(container) {
   container.appendChild(p);
 }
 
-/* ---------- 统一入口：静态地图 + 降级 ---------- */
-function initPlaceMap(container, places, note) {
-  if (!container) return;
+/* ---------- 懒加载观察器（共享实例） ---------- */
+var mapObserver = null;
+function getMapObserver() {
+  if (mapObserver) return mapObserver;
+  mapObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var rec = entry.target.__mapRec;
+      if (!rec) return;
+      if (entry.isIntersecting) {
+        rec.visible = true;
+        loadMapImage(entry.target, rec);
+      }
+    });
+  }, { rootMargin: '100px 0px', threshold: 0 });
+  return mapObserver;
+}
 
-  var url = staticMapUrl(places, 600, 300);
-  if (!url) {
-    renderFallback(container, places, note);
-    return;
-  }
+/* ---------- 加载单张地图图片（支持重试） ---------- */
+function loadMapImage(container, rec) {
+  if (!rec.visible || container.__mapLoaded) return;
+
+  var url = rec.url;
+  var places = rec.places;
+  var note = rec.note;
+  var retries = rec.retries || 0;
 
   renderLoading(container);
 
-  // 尝试加载静态地图图片
   var img = new Image();
   img.crossOrigin = 'anonymous';
   img.className = 'static-map-img';
@@ -99,22 +113,62 @@ function initPlaceMap(container, places, note) {
   img.onload = function() {
     container.textContent = '';
     container.appendChild(img);
+    container.__mapLoaded = true;
   };
+
   img.onerror = function() {
-    console.warn('地图图片加载失败，URL:', url);
-    renderFallback(container, places, note, '地图加载失败，显示地点列表');
+    console.warn('地图图片加载失败，重试:', retries, url);
+    if (retries < 1) {
+      // 重试一次
+      rec.retries = retries + 1;
+      setTimeout(function() { loadMapImage(container, rec); }, 1000);
+    } else {
+      renderFallback(container, places, note, '地图加载失败，显示地点列表');
+      container.__mapLoaded = true;
+    }
   };
+
   img.src = url;
 
-  // 超时降级（手机网络慢，延长到 8 秒）
+  // 超时降级（15秒，给慢网络足够时间）
   setTimeout(function() {
-    if (!container.querySelector('img')) {
+    if (!container.__mapLoaded) {
+      console.warn('地图加载超时:', url);
       renderFallback(container, places, note, '地图加载超时，显示地点列表');
+      container.__mapLoaded = true;
     }
-  }, 8000);
+  }, 15000);
 }
 
-/* 主页足迹图 */
+/* ---------- 统一入口：懒加载静态地图 ---------- */
+function initPlaceMap(container, places, note) {
+  if (!container) return;
+
+  var pts = (places || []).filter(function (p) { return p.location; });
+  if (!pts.length) {
+    renderFallback(container, places, note);
+    return;
+  }
+
+  var url = staticMapUrl(pts, 600, 300);
+  if (!url) {
+    renderFallback(container, places, note);
+    return;
+  }
+
+  container.__mapRec = { url: url, places: places, note: note || '', visible: false, retries: 0 };
+  container.__mapLoaded = false;
+
+  if ('IntersectionObserver' in window) {
+    getMapObserver().observe(container);
+  } else {
+    // 老浏览器直接加载
+    container.__mapRec.visible = true;
+    loadMapImage(container, container.__mapRec);
+  }
+}
+
+/* 主页足迹图（直接加载，不需要懒加载） */
 function renderFootprintMap(container, spots) {
   if (!container || !spots.length) return;
   var url = staticMapUrl(spots, 600, 200);
@@ -143,10 +197,9 @@ function renderFootprintMap(container, spots) {
   };
   img.src = url;
 
-  // 超时隐藏
   setTimeout(function() {
     if (!container.querySelector('img')) {
       container.hidden = true;
     }
-  }, 8000);
+  }, 15000);
 }
