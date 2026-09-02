@@ -14,17 +14,35 @@ function amapLoader() {
   if (amapReady) return amapReady;
   if (!CONFIG.amapKey) {
     amapReady = Promise.reject(new Error('no-key'));
-  } else {
-    amapReady = new Promise(function (resolve, reject) {
-      const script = document.createElement('script');
-      script.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(CONFIG.amapKey) + (CONFIG.securityJsCode ? '&jscode=' + encodeURIComponent(CONFIG.securityJsCode) : '');
-      script.onload = function () {
-        if (window.AMap) resolve(window.AMap); else reject(new Error('AMap 未定义'));
-      };
-      script.onerror = function () { reject(new Error('高德脚本加载失败')); };
-      document.head.appendChild(script);
-    });
+    return amapReady;
   }
+  // 高德 2.0 推荐用 Loader 加载，并在加载前设置安全密钥
+  amapReady = new Promise(function (resolve, reject) {
+    // 1. 先设置安全密钥（必须在 loader 之前）
+    if (CONFIG.securityJsCode) {
+      window._AMapSecurityConfig = { securityJsCode: CONFIG.securityJsCode };
+    }
+    // 2. 加载 loader.js
+    const loader = document.createElement('script');
+    loader.src = 'https://webapi.amap.com/loader.js';
+    loader.onload = function () {
+      if (!window.AMapLoader) {
+        reject(new Error('AMapLoader 未定义'));
+        return;
+      }
+      // 3. 通过 Loader 加载地图核心
+      window.AMapLoader.load({
+        key: CONFIG.amapKey,
+        version: '2.0'
+      }).then(function (AMap) {
+        resolve(AMap);
+      }).catch(function (err) {
+        reject(new Error('高德地图加载失败: ' + (err && err.message ? err.message : '未知错误')));
+      });
+    };
+    loader.onerror = function () { reject(new Error('高德 Loader 加载失败')); };
+    document.head.appendChild(loader);
+  });
   amapReady.catch(function () {}); // 防止未处理 rejection
   return amapReady;
 }
