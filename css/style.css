@@ -133,8 +133,13 @@ button { font: inherit; cursor: pointer; }
   scrollbar-width: none;
 }
 .day-deck::-webkit-scrollbar { display: none; }
-.day { flex: 0 0 100%; scroll-snap-align: start; }
-@media (min-width: 480px) { .day { flex: 0 0 92%; } }
+.day {
+  flex: 0 0 calc(100% - 28px); /* 减去左右 padding 保证整卡可见 */
+  scroll-snap-align: start;
+}
+@media (min-width: 480px) {
+  .day { flex: 0 0 calc(100% - 28px); }
+}
 
 .day-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 16px 18px; }
 
