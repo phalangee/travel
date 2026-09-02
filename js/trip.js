@@ -46,9 +46,16 @@
       info.appendChild(el('li', 'day-card__info-item', '📍 ' + route.to));
     }
     if (day.lodging && day.lodging.city) {
-      info.appendChild(el('li', 'day-card__info-item', '🏨 住宿：' + day.lodging.city +
+      const stay = el('li', 'day-card__info-item');
+      stay.appendChild(document.createTextNode('🏨 住宿：' + day.lodging.city +
         (day.lodging.hotel ? ' · ' + day.lodging.hotel : '') +
         (day.lodging.nights > 1 ? '（连住' + day.lodging.nights + '晚）' : '')));
+      if (day.lodging.booking) {
+        const b = el('span', 'chip chip--booking', '已订 · ' + day.lodging.booking);
+        stay.appendChild(document.createTextNode(' '));
+        stay.appendChild(b);
+      }
+      info.appendChild(stay);
     }
     (day.highlights || []).forEach(function (h) {
       info.appendChild(el('li', 'day-card__info-item day-card__info-item--hl', '★ ' + h));

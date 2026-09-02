@@ -41,7 +41,7 @@
 | `date` | `"2026-09-23"` | 日期，必须连续 |
 | `dayIndex` | number | 从 1 开始连续 |
 | `route` | object | `{ from, to, driveTime }`；from==to 表示驻地日 |
-| `lodging` | object/null | `{ city, hotel, location:[lng,lat], nights }`；返程日可为 null |
+| `lodging` | object/null | `{ city, hotel, booking?, location:[lng,lat], nights }`；返程日可为 null；`booking` 为预定渠道（携程/去哪儿/小程序…），页面显示为「已订 · 渠道」徽标 |
 | `strength` | `"easy"/"medium"/"hard"` | 显示为轻松/中等/辛苦 |
 | `highlights` | string[] | 总览卡要点（前缀自动加★） |
 | `scenery` | string | 沿途风景说明（行程Tab顶部显示） |

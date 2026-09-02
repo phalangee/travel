@@ -18,436 +18,1544 @@
     {
       "date": "2026-09-23",
       "dayIndex": 1,
-      "route": { "from": "地窝堡机场", "to": "乌鲁木齐市区", "driveTime": "40min" },
-      "lodging": { "city": "乌鲁木齐", "hotel": "友好大酒店 / 红山附近（暂定）", "location": [87.598, 43.809], "nights": 1 },
+      "route": {
+        "from": "北京大兴",
+        "to": "乌鲁木齐",
+        "driveTime": "飞行约4h"
+      },
+      "lodging": {
+        "city": "乌鲁木齐",
+        "hotel": "天缘景瑞（天山国际机场店）",
+        "location": [
+          87.473,
+          43.907
+        ],
+        "nights": 1,
+        "booking": "携程"
+      },
       "strength": "easy",
-      "highlights": ["抵达乌鲁木齐", "取车（确认安全座椅）"],
+      "highlights": [
+        "CZ6910 抵达乌鲁木齐",
+        "入住机场旁酒店"
+      ],
       "map": {
         "places": [
-          { "name": "地窝堡国际机场", "type": "transfer", "location": [87.473, 43.907] },
-          { "name": "市区酒店", "type": "lodging", "location": [87.598, 43.809], "address": "天山区友好路附近" }
+          {
+            "name": "地窝堡国际机场",
+            "type": "transfer",
+            "location": [
+              87.473,
+              43.907
+            ]
+          },
+          {
+            "name": "天缘景瑞（天山国际机场店）",
+            "type": "lodging",
+            "location": [
+              87.473,
+              43.907
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "19:00", "title": "抵达地窝堡机场", "detail": "取行李，出到达口" },
-        { "time": "19:40", "title": "取车", "detail": "验车、拍照留证，重点确认安全座椅已正确安装", "duration": "约30min" },
-        { "time": "20:40", "title": "入住市区酒店", "detail": "车程约40分钟，宝宝路上可小睡" }
+        {
+          "time": "19:30",
+          "title": "CZ6910 起飞",
+          "detail": "北京大兴国际机场出发",
+          "duration": "飞行约4小时"
+        },
+        {
+          "time": "23:35",
+          "title": "抵达乌鲁木齐",
+          "detail": "地窝堡（天山国际机场）落地，取行李"
+        },
+        {
+          "time": "00:10",
+          "title": "入住机场酒店",
+          "detail": "机场旁步行/摆渡即达，宝宝直接睡觉，第二天机场取车"
+        }
       ],
       "food": [
-        { "meal": "dinner", "title": "抵达日晚餐", "detail": "时间较晚，酒店附近简餐即可：大盘鸡、烤肉、过油肉拌面都是稳妥选择", "searchKeyword": "乌鲁木齐 大盘鸡" },
-        { "meal": "snack", "title": "宵夜补给", "detail": "便利店买好第二天的水和宝宝零食", "searchKeyword": "便利店" }
+        {
+          "meal": "dinner",
+          "title": "机上晚餐",
+          "detail": "航程约4小时，可提前备好宝宝辅食"
+        },
+        {
+          "meal": "snack",
+          "title": "宵夜补给",
+          "detail": "便利店买好第二天的水和宝宝零食",
+          "searchKeyword": "便利店"
+        }
       ],
       "prep": {
-        "carry": ["身份证、驾驶证（取车必需）", "宝宝奶粉/水杯/常用药", "少量现金（北疆部分偏远地区信号差时备用）"],
-        "tips": ["取车时拍全车视频留证", "确认车辆油量与胎压，问清加油标号（新疆多为92/95）"]
+        "carry": [
+          "身份证、驾驶证（次日机场取车必需）",
+          "宝宝奶粉/水杯/常用药",
+          "少量现金（北疆部分偏远地区信号差时备用）"
+        ],
+        "tips": [
+          "落地时间较晚（23:35），酒店选机场店免奔波",
+          "身份证、宝宝证件随身带，落地直接办入住"
+        ]
       }
     },
     {
       "date": "2026-09-24",
       "dayIndex": 2,
-      "route": { "from": "乌鲁木齐", "to": "富蕴", "driveTime": "1.5h + 5h" },
-      "lodging": { "city": "富蕴", "hotel": "富蕴新华主题酒店 / 上士酒店（暂定）", "location": [89.526, 46.994], "nights": 1 },
+      "route": {
+        "from": "乌鲁木齐",
+        "to": "富蕴",
+        "driveTime": "1.5h + 5h"
+      },
+      "lodging": {
+        "city": "富蕴",
+        "hotel": "全季酒店（阿勒泰富蕴县迎宾东路店）",
+        "location": [
+          89.526,
+          46.994
+        ],
+        "nights": 1,
+        "booking": "携程"
+      },
       "strength": "hard",
-      "highlights": ["天山天池湖边栈道", "进入阿勒泰，草原秋色初现"],
+      "highlights": [
+        "神州租车机场店取车",
+        "天山天池湖边栈道",
+        "进入阿勒泰，草原秋色初现"
+      ],
       "scenery": "后半段进入阿勒泰地区，开始出现草原和秋色，注意看路两侧的白桦与戈壁交替。",
       "map": {
         "places": [
-          { "name": "天山天池", "type": "scenic", "location": [88.116, 43.883], "address": "昌吉州阜康市", "note": "湖边栈道，婴儿车友好" },
-          { "name": "富蕴县城", "type": "lodging", "location": [89.526, 46.994] }
+          {
+            "name": "天山天池",
+            "type": "scenic",
+            "location": [
+              88.116,
+              43.883
+            ],
+            "address": "昌吉州阜康市",
+            "note": "湖边栈道，婴儿车友好"
+          },
+          {
+            "name": "全季酒店（阿勒泰富蕴县迎宾东路店）",
+            "type": "lodging",
+            "location": [
+              89.526,
+              46.994
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "乌鲁木齐出发", "detail": "前往天山天池，车程约1.5小时", "duration": "1.5h车程" },
-        { "time": "10:40", "title": "天山天池", "detail": "区间车上山，湖边栈道慢游，推婴儿车可行，博格达雪峰倒影是经典机位", "duration": "约2.5h" },
-        { "time": "13:30", "title": "出发去富蕴", "detail": "长途段，建议中途在恰库尔图镇或服务区休息一次，给宝宝活动时间", "duration": "约5h车程" },
-        { "time": "18:30", "title": "抵达富蕴入住", "detail": "县城不大，酒店集中在中心区域" }
+        {
+          "time": "08:30",
+          "title": "机场取车出发",
+          "detail": "神州租车机场店取车（验车拍照留证，确认安全座椅安装）后前往天山天池，车程约1.5小时",
+          "duration": "1.5h车程"
+        },
+        {
+          "time": "10:40",
+          "title": "天山天池",
+          "detail": "区间车上山，湖边栈道慢游，推婴儿车可行，博格达雪峰倒影是经典机位",
+          "duration": "约2.5h"
+        },
+        {
+          "time": "13:30",
+          "title": "出发去富蕴",
+          "detail": "长途段，建议中途在恰库尔图镇或服务区休息一次，给宝宝活动时间",
+          "duration": "约5h车程"
+        },
+        {
+          "time": "18:30",
+          "title": "抵达富蕴入住",
+          "detail": "县城不大，酒店集中在中心区域"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "酒店早餐或牛肉面", "searchKeyword": "富蕴县 早餐" },
-        { "meal": "lunch", "title": "天池景区内简餐", "detail": "景区餐厅贵且一般，建议自带简餐+热水", "searchKeyword": "天池 餐厅" },
-        { "meal": "dinner", "title": "富蕴县城晚餐", "detail": "县城选评分高的家常馆：哈萨克风味、烤肉、纳仁", "searchKeyword": "富蕴县 餐厅" }
+        {
+          "meal": "breakfast",
+          "title": "酒店早餐或牛肉面",
+          "searchKeyword": "富蕴县 早餐"
+        },
+        {
+          "meal": "lunch",
+          "title": "天池景区内简餐",
+          "detail": "景区餐厅贵且一般，建议自带简餐+热水",
+          "searchKeyword": "天池 餐厅"
+        },
+        {
+          "meal": "dinner",
+          "title": "富蕴县城晚餐",
+          "detail": "县城选评分高的家常馆：哈萨克风味、烤肉、纳仁",
+          "searchKeyword": "富蕴县 餐厅"
+        }
       ],
       "prep": {
-        "clothing": ["天池海拔约1900米，比市区冷8-10°C，厚外套必备", "紫外线强，防晒霜、帽子"],
-        "carry": ["长途车程：宝宝零食、绘本、下载好的动画片", "保温壶装热水"],
-        "tips": ["今天车程最长，出发前加满油", "每2小时进服务区休息，防疲劳驾驶"]
+        "clothing": [
+          "天池海拔约1900米，比市区冷8-10°C，厚外套必备",
+          "紫外线强，防晒霜、帽子"
+        ],
+        "carry": [
+          "长途车程：宝宝零食、绘本、下载好的动画片",
+          "保温壶装热水"
+        ],
+        "tips": [
+          "今天车程最长，出发前加满油",
+          "每2小时进服务区休息，防疲劳驾驶"
+        ]
       }
     },
     {
       "date": "2026-09-25",
       "dayIndex": 3,
-      "route": { "from": "富蕴", "to": "北屯", "driveTime": "40min + 4h" },
-      "lodging": { "city": "北屯", "hotel": "得仁山花园酒店 / 兰欧国际酒店（暂定）", "location": [87.808, 47.353], "nights": 1 },
+      "route": {
+        "from": "富蕴",
+        "to": "北屯",
+        "driveTime": "40min + 4h"
+      },
+      "lodging": {
+        "city": "北屯",
+        "hotel": "格林东方酒店（北屯步行街店）",
+        "location": [
+          87.808,
+          47.353
+        ],
+        "nights": 1,
+        "booking": "携程"
+      },
       "strength": "medium",
-      "highlights": ["可可托海神钟山", "额尔齐斯大峡谷"],
+      "highlights": [
+        "可可托海神钟山",
+        "额尔齐斯大峡谷"
+      ],
       "scenery": "前半段是可可托海景区外的延伸峡谷风光，额尔齐斯河一路相伴。",
       "map": {
         "places": [
-          { "name": "可可托海景区", "type": "scenic", "location": [89.701, 47.211], "address": "阿勒泰地区富蕴县", "note": "神钟山为核心景点" },
-          { "name": "北屯市区", "type": "lodging", "location": [87.808, 47.353] }
+          {
+            "name": "可可托海景区",
+            "type": "scenic",
+            "location": [
+              89.701,
+              47.211
+            ],
+            "address": "阿勒泰地区富蕴县",
+            "note": "神钟山为核心景点"
+          },
+          {
+            "name": "格林东方酒店（北屯步行街店）",
+            "type": "lodging",
+            "location": [
+              87.808,
+              47.353
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "富蕴出发", "detail": "前往可可托海景区，车程约40分钟", "duration": "40min车程" },
-        { "time": "09:45", "title": "可可托海", "detail": "景区区间车至神钟山，栈道沿额尔齐斯河，秋色正浓时极美；带宝宝走短程即可", "duration": "约3.5h" },
-        { "time": "13:30", "title": "景区门口午餐", "detail": "镇上有餐馆，吃饱再上路" },
-        { "time": "14:30", "title": "出发去北屯", "detail": "沿额尔齐斯河而下，途经戈壁与绿洲", "duration": "约4h车程" },
-        { "time": "18:30", "title": "抵达北屯入住", "detail": "北屯是去喀纳斯的补给站，晚上采购第二天物资" }
+        {
+          "time": "09:00",
+          "title": "富蕴出发",
+          "detail": "前往可可托海景区，车程约40分钟",
+          "duration": "40min车程"
+        },
+        {
+          "time": "09:45",
+          "title": "可可托海",
+          "detail": "景区区间车至神钟山，栈道沿额尔齐斯河，秋色正浓时极美；带宝宝走短程即可",
+          "duration": "约3.5h"
+        },
+        {
+          "time": "13:30",
+          "title": "景区门口午餐",
+          "detail": "镇上有餐馆，吃饱再上路"
+        },
+        {
+          "time": "14:30",
+          "title": "出发去北屯",
+          "detail": "沿额尔齐斯河而下，途经戈壁与绿洲",
+          "duration": "约4h车程"
+        },
+        {
+          "time": "18:30",
+          "title": "抵达北屯入住",
+          "detail": "北屯是去喀纳斯的补给站，晚上采购第二天物资"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "富蕴早餐", "searchKeyword": "富蕴县 早餐" },
-        { "meal": "lunch", "title": "可可托海镇午餐", "detail": "小镇以新疆家常菜为主", "searchKeyword": "可可托海镇 餐厅" },
-        { "meal": "dinner", "title": "北屯晚餐", "detail": "冷水鱼（额尔齐斯河鱼）是当地特色", "searchKeyword": "北屯 冷水鱼" }
+        {
+          "meal": "breakfast",
+          "title": "富蕴早餐",
+          "searchKeyword": "富蕴县 早餐"
+        },
+        {
+          "meal": "lunch",
+          "title": "可可托海镇午餐",
+          "detail": "小镇以新疆家常菜为主",
+          "searchKeyword": "可可托海镇 餐厅"
+        },
+        {
+          "meal": "dinner",
+          "title": "北屯晚餐",
+          "detail": "冷水鱼（额尔齐斯河鱼）是当地特色",
+          "searchKeyword": "北屯 冷水鱼"
+        }
       ],
       "prep": {
-        "clothing": ["峡谷内风大，防风外套", "步道可能有结霜，穿防滑鞋"],
-        "carry": ["明天进喀纳斯前的采购：水果、面包、宝宝辅食（景区内物价高）"],
-        "tips": ["可可托海9月底已较冷，备好宝宝的厚衣物", "今晚给所有充电设备充满电，喀纳斯住宿条件有限"]
+        "clothing": [
+          "峡谷内风大，防风外套",
+          "步道可能有结霜，穿防滑鞋"
+        ],
+        "carry": [
+          "明天进喀纳斯前的采购：水果、面包、宝宝辅食（景区内物价高）"
+        ],
+        "tips": [
+          "可可托海9月底已较冷，备好宝宝的厚衣物",
+          "今晚给所有充电设备充满电，喀纳斯住宿条件有限"
+        ]
       }
     },
     {
       "date": "2026-09-26",
       "dayIndex": 4,
-      "route": { "from": "北屯", "to": "喀纳斯老村", "driveTime": "1.5h + 2.5h（含换乘）" },
-      "lodging": { "city": "喀纳斯老村", "hotel": "蝴蝶山庄（暂定）", "location": [87.010, 48.695], "nights": 2 },
+      "route": {
+        "from": "北屯",
+        "to": "喀纳斯老村",
+        "driveTime": "1.5h + 2.5h（含换乘）"
+      },
+      "lodging": {
+        "city": "喀纳斯",
+        "hotel": "ZARAT·自然有咖·Sanbainu民宿（喀纳斯景区店）",
+        "location": [
+          87.01,
+          48.695
+        ],
+        "nights": 2,
+        "booking": "去哪儿"
+      },
       "strength": "hard",
-      "highlights": ["全程最美路段：布尔津→喀纳斯", "白哈巴·西北第一村"],
+      "highlights": [
+        "全程最美路段：布尔津→喀纳斯",
+        "白哈巴·西北第一村"
+      ],
       "scenery": "布尔津到喀纳斯是北疆秋景精华：金黄白桦林与牛羊转场，车窗外就是大片。贾登峪之后山路蜿蜒，晕车者提前吃药。",
       "map": {
         "places": [
-          { "name": "布尔津县城", "type": "food", "location": [86.863, 47.702], "note": "加油+采购" },
-          { "name": "贾登峪停车换乘", "type": "transfer", "location": [86.975, 48.493], "note": "私家车停放处" },
-          { "name": "喀纳斯换乘中心", "type": "transfer", "location": [87.025, 48.685], "note": "办边防证、购景区票" },
-          { "name": "白哈巴村", "type": "scenic", "location": [86.724, 48.837], "note": "需边防证" },
-          { "name": "喀纳斯老村", "type": "lodging", "location": [87.010, 48.695] }
+          {
+            "name": "布尔津县城",
+            "type": "food",
+            "location": [
+              86.863,
+              47.702
+            ],
+            "note": "加油+采购"
+          },
+          {
+            "name": "贾登峪停车换乘",
+            "type": "transfer",
+            "location": [
+              86.975,
+              48.493
+            ],
+            "note": "私家车停放处"
+          },
+          {
+            "name": "喀纳斯换乘中心",
+            "type": "transfer",
+            "location": [
+              87.025,
+              48.685
+            ],
+            "note": "办边防证、购景区票"
+          },
+          {
+            "name": "白哈巴村",
+            "type": "scenic",
+            "location": [
+              86.724,
+              48.837
+            ],
+            "note": "需边防证"
+          },
+          {
+            "name": "ZARAT·自然有咖·Sanbainu民宿（喀纳斯景区店）",
+            "type": "lodging",
+            "location": [
+              87.01,
+              48.695
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "08:00", "title": "北屯出发", "detail": "前往布尔津，车程约1.5小时", "duration": "1.5h车程" },
-        { "time": "09:30", "title": "布尔津加油采购", "detail": "加满油（山里油价贵且加油站少），采购午餐食材", "duration": "约45min" },
-        { "time": "11:00", "title": "贾登峪停车换乘", "detail": "私家车停贾登峪停车场，换乘景区区间车", "duration": "1h车程" },
-        { "time": "11:40", "title": "换乘中心：办证+购票", "detail": "白哈巴需办边防证（大人身份证、宝宝户口本/出生证明），买喀纳斯景区票+白哈巴村票", "duration": "约40min" },
-        { "time": "14:00", "title": "白哈巴", "detail": "西北第一村，中哈边境的小村庄，木屋炊烟，安静辽阔", "duration": "约2h" },
-        { "time": "17:00", "title": "返回喀纳斯老村入住", "detail": "区间车返回，晚饭前到即可" }
+        {
+          "time": "08:00",
+          "title": "北屯出发",
+          "detail": "前往布尔津，车程约1.5小时",
+          "duration": "1.5h车程"
+        },
+        {
+          "time": "09:30",
+          "title": "布尔津加油采购",
+          "detail": "加满油（山里油价贵且加油站少），采购午餐食材",
+          "duration": "约45min"
+        },
+        {
+          "time": "11:00",
+          "title": "贾登峪停车换乘",
+          "detail": "私家车停贾登峪停车场，换乘景区区间车",
+          "duration": "1h车程"
+        },
+        {
+          "time": "11:40",
+          "title": "换乘中心：办证+购票",
+          "detail": "白哈巴需办边防证（大人身份证、宝宝户口本/出生证明），买喀纳斯景区票+白哈巴村票",
+          "duration": "约40min"
+        },
+        {
+          "time": "14:00",
+          "title": "白哈巴",
+          "detail": "西北第一村，中哈边境的小村庄，木屋炊烟，安静辽阔",
+          "duration": "约2h"
+        },
+        {
+          "time": "17:00",
+          "title": "返回喀纳斯老村入住",
+          "detail": "区间车返回，晚饭前到即可"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "北屯早餐后出发", "searchKeyword": "北屯 早餐" },
-        { "meal": "lunch", "title": "自带简餐", "detail": "布尔津采购面包、馕、水果，换乘途中解决" },
-        { "meal": "dinner", "title": "老村民宿晚餐", "detail": "民宿多可点餐：奶茶、手抓肉、野菜；提前和老板约好时间", "searchKeyword": "喀纳斯 老村 餐厅" }
+        {
+          "meal": "breakfast",
+          "title": "北屯早餐后出发",
+          "searchKeyword": "北屯 早餐"
+        },
+        {
+          "meal": "lunch",
+          "title": "自带简餐",
+          "detail": "布尔津采购面包、馕、水果，换乘途中解决"
+        },
+        {
+          "meal": "dinner",
+          "title": "老村民宿晚餐",
+          "detail": "民宿多可点餐：奶茶、手抓肉、野菜；提前和老板约好时间",
+          "searchKeyword": "喀纳斯 老村 餐厅"
+        }
       ],
       "prep": {
-        "clothing": ["喀纳斯海拔1300米+，夜间可能接近0°C，羽绒服安排上", "白天徒步穿层，方便穿脱"],
-        "carry": ["边防证材料：大人身份证、宝宝户口本或出生证明", "晕车药（山路弯多）", "湿巾、垃圾袋（景区内垃圾分类严格）"],
-        "tickets": [
-          { "title": "喀纳斯景区门票+区间车", "detail": "可在「喀纳斯旅游」公众号提前购买，儿童按身高免/半票", "status": "todo" },
-          { "title": "白哈巴村门票+边防证", "detail": "换乘中心现场办理，需所有人证件", "status": "todo" }
+        "clothing": [
+          "喀纳斯海拔1300米+，夜间可能接近0°C，羽绒服安排上",
+          "白天徒步穿层，方便穿脱"
         ],
-        "tips": ["行李从简带上景区，大件可留在车里", "山里信号弱，提前截图离线地图"]
+        "carry": [
+          "边防证材料：大人身份证、宝宝户口本或出生证明",
+          "晕车药（山路弯多）",
+          "湿巾、垃圾袋（景区内垃圾分类严格）"
+        ],
+        "tickets": [
+          {
+            "title": "喀纳斯景区门票+区间车",
+            "detail": "可在「喀纳斯旅游」公众号提前购买，儿童按身高免/半票",
+            "status": "todo"
+          },
+          {
+            "title": "白哈巴村门票+边防证",
+            "detail": "换乘中心现场办理，需所有人证件",
+            "status": "todo"
+          }
+        ],
+        "tips": [
+          "行李从简带上景区，大件可留在车里",
+          "山里信号弱，提前截图离线地图"
+        ]
       }
     },
     {
       "date": "2026-09-27",
       "dayIndex": 5,
-      "route": { "from": "喀纳斯老村", "to": "喀纳斯老村", "driveTime": "景区区间车" },
-      "lodging": { "city": "喀纳斯老村", "hotel": "蝴蝶山庄（暂定）", "location": [87.010, 48.695], "nights": 2 },
+      "route": {
+        "from": "喀纳斯老村",
+        "to": "喀纳斯老村",
+        "driveTime": "景区区间车"
+      },
+      "lodging": {
+        "city": "喀纳斯",
+        "hotel": "ZARAT·自然有咖·Sanbainu民宿（喀纳斯景区店）",
+        "location": [
+          87.01,
+          48.695
+        ],
+        "nights": 2,
+        "booking": "去哪儿"
+      },
       "strength": "medium",
-      "highlights": ["喀纳斯湖游船", "观鱼台俯瞰全湖（爸爸专属）"],
+      "highlights": [
+        "喀纳斯湖游船",
+        "观鱼台俯瞰全湖（爸爸专属）"
+      ],
       "map": {
         "places": [
-          { "name": "喀纳斯湖码头", "type": "scenic", "location": [87.005, 48.706], "note": "游船乘船处" },
-          { "name": "观鱼台", "type": "scenic", "location": [87.005, 48.727], "note": "俯瞰喀纳斯湖全景" },
-          { "name": "喀纳斯老村", "type": "lodging", "location": [87.010, 48.695] }
+          {
+            "name": "喀纳斯湖码头",
+            "type": "scenic",
+            "location": [
+              87.005,
+              48.706
+            ],
+            "note": "游船乘船处"
+          },
+          {
+            "name": "观鱼台",
+            "type": "scenic",
+            "location": [
+              87.005,
+              48.727
+            ],
+            "note": "俯瞰喀纳斯湖全景"
+          },
+          {
+            "name": "ZARAT·自然有咖·Sanbainu民宿（喀纳斯景区店）",
+            "type": "lodging",
+            "location": [
+              87.01,
+              48.695
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:30", "title": "喀纳斯湖游船", "detail": "老村乘车至码头，湖上视角看变色湖水与山林", "duration": "约1.5h" },
-        { "time": "11:30", "title": "码头附近午餐", "detail": "简餐为主" },
-        { "time": "13:00", "title": "观鱼台", "detail": "爸爸一人登顶（区间车+1000余级台阶），妈妈带宝宝在换乘中心休息；晴天可俯瞰全湖", "duration": "约2.5h" },
-        { "time": "16:00", "title": "老村闲逛", "detail": "村子慢节奏散步，看图瓦人木屋，早早回民宿休息" }
+        {
+          "time": "09:30",
+          "title": "喀纳斯湖游船",
+          "detail": "老村乘车至码头，湖上视角看变色湖水与山林",
+          "duration": "约1.5h"
+        },
+        {
+          "time": "11:30",
+          "title": "码头附近午餐",
+          "detail": "简餐为主"
+        },
+        {
+          "time": "13:00",
+          "title": "观鱼台",
+          "detail": "爸爸一人登顶（区间车+1000余级台阶），妈妈带宝宝在换乘中心休息；晴天可俯瞰全湖",
+          "duration": "约2.5h"
+        },
+        {
+          "time": "16:00",
+          "title": "老村闲逛",
+          "detail": "村子慢节奏散步，看图瓦人木屋，早早回民宿休息"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "民宿早餐", "detail": "通常含奶茶、馕、鸡蛋，提前确认" },
-        { "meal": "lunch", "title": "换乘中心附近简餐", "searchKeyword": "喀纳斯 餐厅" },
-        { "meal": "dinner", "title": "民宿晚餐", "detail": "提前跟老板打招呼约饭，烤肉+汤类适合宝宝" }
+        {
+          "meal": "breakfast",
+          "title": "民宿早餐",
+          "detail": "通常含奶茶、馕、鸡蛋，提前确认"
+        },
+        {
+          "meal": "lunch",
+          "title": "换乘中心附近简餐",
+          "searchKeyword": "喀纳斯 餐厅"
+        },
+        {
+          "meal": "dinner",
+          "title": "民宿晚餐",
+          "detail": "提前跟老板打招呼约饭，烤肉+汤类适合宝宝"
+        }
       ],
       "prep": {
-        "clothing": ["湖区早晚极冷，羽绒+帽子", "白天紫外线强"],
-        "carry": ["宝宝推车可留在民宿，今天全靠背带/牵手", "观鱼台登顶者：水、能量零食"],
-        "tips": ["游船票可在码头现场买，也可公众号预订", "带宝宝的节奏：宁可少看一个点，保住午睡"]
+        "clothing": [
+          "湖区早晚极冷，羽绒+帽子",
+          "白天紫外线强"
+        ],
+        "carry": [
+          "宝宝推车可留在民宿，今天全靠背带/牵手",
+          "观鱼台登顶者：水、能量零食"
+        ],
+        "tips": [
+          "游船票可在码头现场买，也可公众号预订",
+          "带宝宝的节奏：宁可少看一个点，保住午睡"
+        ]
       }
     },
     {
       "date": "2026-09-28",
       "dayIndex": 6,
-      "route": { "from": "喀纳斯老村", "to": "禾木", "driveTime": "1.5h" },
-      "lodging": { "city": "禾木", "hotel": "百年老屋（暂定）", "location": [87.227, 48.575], "nights": 1 },
+      "route": {
+        "from": "喀纳斯老村",
+        "to": "禾木",
+        "driveTime": "1.5h"
+      },
+      "lodging": {
+        "city": "禾木",
+        "hotel": "纳兰禾谷民宿（禾木风景区店）",
+        "location": [
+          87.227,
+          48.575
+        ],
+        "nights": 1,
+        "booking": "携程"
+      },
       "strength": "medium",
-      "highlights": ["三湾徒步（推婴儿车版）", "喀纳斯→禾木景观大道"],
+      "highlights": [
+        "三湾徒步（推婴儿车版）",
+        "喀纳斯→禾木景观大道"
+      ],
       "scenery": "喀纳斯到禾木是另一条景观大道，秋色绝美；禾木的黄昏和清晨炊烟是北疆之行的灵魂。",
       "map": {
         "places": [
-          { "name": "神仙湾", "type": "scenic", "location": [87.045, 48.707], "note": "清晨有晨雾，区间车可观" },
-          { "name": "月亮湾", "type": "scenic", "location": [87.020, 48.678], "note": "徒步起点" },
-          { "name": "卧龙湾", "type": "scenic", "location": [87.012, 48.660], "note": "徒步终点" },
-          { "name": "贾登峪取车", "type": "transfer", "location": [86.975, 48.493] },
-          { "name": "禾木门票站", "type": "transfer", "location": [87.148, 48.522], "note": "换乘区间车进村" },
-          { "name": "禾木村", "type": "lodging", "location": [87.227, 48.575] }
+          {
+            "name": "神仙湾",
+            "type": "scenic",
+            "location": [
+              87.045,
+              48.707
+            ],
+            "note": "清晨有晨雾，区间车可观"
+          },
+          {
+            "name": "月亮湾",
+            "type": "scenic",
+            "location": [
+              87.02,
+              48.678
+            ],
+            "note": "徒步起点"
+          },
+          {
+            "name": "卧龙湾",
+            "type": "scenic",
+            "location": [
+              87.012,
+              48.66
+            ],
+            "note": "徒步终点"
+          },
+          {
+            "name": "贾登峪取车",
+            "type": "transfer",
+            "location": [
+              86.975,
+              48.493
+            ]
+          },
+          {
+            "name": "禾木门票站",
+            "type": "transfer",
+            "location": [
+              87.148,
+              48.522
+            ],
+            "note": "换乘区间车进村"
+          },
+          {
+            "name": "纳兰禾谷民宿（禾木风景区店）",
+            "type": "lodging",
+            "location": [
+              87.227,
+              48.575
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "退房寄存行李", "detail": "大件寄民宿或随身带（今天不回老村）" },
-        { "time": "09:30", "title": "区间车观神仙湾", "detail": "车览+短暂停留拍照" },
-        { "time": "10:00", "title": "月亮湾→卧龙湾徒步", "detail": "月亮湾下车，沿栈道推婴儿车至卧龙湾，约1.5km下坡，轻松出片", "duration": "约1.5h" },
-        { "time": "12:00", "title": "贾登峪取车", "detail": "区间车返回贾登峪，路边午餐" },
-        { "time": "14:00", "title": "禾木门票站换乘", "detail": "自驾至禾木门票站，换区间车进村（约40min）" },
-        { "time": "16:00", "title": "入住禾木村", "detail": "傍晚村中散步，看日落炊烟" }
+        {
+          "time": "09:00",
+          "title": "退房寄存行李",
+          "detail": "大件寄民宿或随身带（今天不回老村）"
+        },
+        {
+          "time": "09:30",
+          "title": "区间车观神仙湾",
+          "detail": "车览+短暂停留拍照"
+        },
+        {
+          "time": "10:00",
+          "title": "月亮湾→卧龙湾徒步",
+          "detail": "月亮湾下车，沿栈道推婴儿车至卧龙湾，约1.5km下坡，轻松出片",
+          "duration": "约1.5h"
+        },
+        {
+          "time": "12:00",
+          "title": "贾登峪取车",
+          "detail": "区间车返回贾登峪，路边午餐"
+        },
+        {
+          "time": "14:00",
+          "title": "禾木门票站换乘",
+          "detail": "自驾至禾木门票站，换区间车进村（约40min）"
+        },
+        {
+          "time": "16:00",
+          "title": "入住禾木村",
+          "detail": "傍晚村中散步，看日落炊烟"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "民宿早餐", "detail": "退房前吃饱" },
-        { "meal": "lunch", "title": "贾登峪午餐", "detail": "贾登峪是换乘枢纽，餐馆集中在停车场附近", "searchKeyword": "贾登峪 餐厅" },
-        { "meal": "dinner", "title": "禾木民宿晚餐", "detail": "提前约饭；土火锅是禾木特色", "searchKeyword": "禾木 土火锅" }
+        {
+          "meal": "breakfast",
+          "title": "民宿早餐",
+          "detail": "退房前吃饱"
+        },
+        {
+          "meal": "lunch",
+          "title": "贾登峪午餐",
+          "detail": "贾登峪是换乘枢纽，餐馆集中在停车场附近",
+          "searchKeyword": "贾登峪 餐厅"
+        },
+        {
+          "meal": "dinner",
+          "title": "禾木民宿晚餐",
+          "detail": "提前约饭；土火锅是禾木特色",
+          "searchKeyword": "禾木 土火锅"
+        }
       ],
       "prep": {
-        "clothing": ["禾木夜里更冷，0°C上下", "徒步穿抓绒+防风外套"],
-        "carry": ["婴儿车（今天主角装备）", "明天看晨雾：闹钟+厚衣服提前放床头"],
-        "tickets": [
-          { "title": "禾木村门票+区间车", "detail": "门票站现场或公众号购买", "status": "todo" }
+        "clothing": [
+          "禾木夜里更冷，0°C上下",
+          "徒步穿抓绒+防风外套"
         ],
-        "tips": ["禾木村内住宿条件一般，对热水和供暖提前有心理预期", "行李尽量精简上山"]
+        "carry": [
+          "婴儿车（今天主角装备）",
+          "明天看晨雾：闹钟+厚衣服提前放床头"
+        ],
+        "tickets": [
+          {
+            "title": "禾木村门票+区间车",
+            "detail": "门票站现场或公众号购买",
+            "status": "todo"
+          }
+        ],
+        "tips": [
+          "禾木村内住宿条件一般，对热水和供暖提前有心理预期",
+          "行李尽量精简上山"
+        ]
       }
     },
     {
       "date": "2026-09-29",
       "dayIndex": 7,
-      "route": { "from": "禾木", "to": "布尔津", "driveTime": "2h + 30min" },
-      "lodging": { "city": "布尔津", "hotel": "布尔津旅游宾馆（暂定）", "location": [86.863, 47.702], "nights": 1 },
+      "route": {
+        "from": "禾木",
+        "to": "布尔津",
+        "driveTime": "2h + 30min"
+      },
+      "lodging": {
+        "city": "布尔津",
+        "hotel": "Taiuye泰悦假日酒店",
+        "location": [
+          86.863,
+          47.702
+        ],
+        "nights": 1,
+        "booking": "携程"
+      },
       "strength": "easy",
-      "highlights": ["禾木清晨闲逛", "五彩滩日落", "河堤夜市"],
+      "highlights": [
+        "禾木清晨闲逛",
+        "五彩滩日落",
+        "河堤夜市"
+      ],
       "map": {
         "places": [
-          { "name": "禾木村", "type": "scenic", "location": [87.227, 48.575], "note": "晨雾观景台可选" },
-          { "name": "布尔津县城", "type": "lodging", "location": [86.863, 47.702] },
-          { "name": "五彩滩", "type": "scenic", "location": [86.898, 47.879], "note": "雅丹地貌，日落最美" }
+          {
+            "name": "禾木村",
+            "type": "scenic",
+            "location": [
+              87.227,
+              48.575
+            ],
+            "note": "晨雾观景台可选"
+          },
+          {
+            "name": "Taiuye泰悦假日酒店",
+            "type": "lodging",
+            "location": [
+              86.863,
+              47.702
+            ]
+          },
+          {
+            "name": "五彩滩",
+            "type": "scenic",
+            "location": [
+              86.898,
+              47.879
+            ],
+            "note": "雅丹地貌，日落最美"
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "禾木闲逛", "detail": "想看晨雾可早起去观景台（可选，看宝宝状态）", "duration": "约1.5h" },
-        { "time": "11:00", "title": "出村", "detail": "区间车出山，取车", "duration": "约1h" },
-        { "time": "13:00", "title": "抵达布尔津", "detail": "入住、午餐、午休" },
-        { "time": "17:00", "title": "出发五彩滩", "detail": "县城西北方向约30分钟车程", "duration": "30min车程" },
-        { "time": "17:45", "title": "五彩滩看日落", "detail": "夕阳把雅丹地貌染成金红色，额尔齐斯河在旁静静流过", "duration": "约1.5h" },
-        { "time": "20:30", "title": "河堤夜市晚餐", "detail": "烤狗鱼、格瓦斯，布尔津的夜生活代表" }
+        {
+          "time": "09:00",
+          "title": "禾木闲逛",
+          "detail": "想看晨雾可早起去观景台（可选，看宝宝状态）",
+          "duration": "约1.5h"
+        },
+        {
+          "time": "11:00",
+          "title": "出村",
+          "detail": "区间车出山，取车",
+          "duration": "约1h"
+        },
+        {
+          "time": "13:00",
+          "title": "抵达布尔津",
+          "detail": "入住、午餐、午休"
+        },
+        {
+          "time": "17:00",
+          "title": "出发五彩滩",
+          "detail": "县城西北方向约30分钟车程",
+          "duration": "30min车程"
+        },
+        {
+          "time": "17:45",
+          "title": "五彩滩看日落",
+          "detail": "夕阳把雅丹地貌染成金红色，额尔齐斯河在旁静静流过",
+          "duration": "约1.5h"
+        },
+        {
+          "time": "20:30",
+          "title": "河堤夜市晚餐",
+          "detail": "烤狗鱼、格瓦斯，布尔津的夜生活代表"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "禾木民宿早餐", "detail": "吃得暖和再出发" },
-        { "meal": "lunch", "title": "布尔津午餐", "detail": "县城选择多，回锅肉拌面、椒麻鸡", "searchKeyword": "布尔津 餐厅" },
-        { "meal": "dinner", "title": "河堤夜市", "detail": "烤狗鱼必吃，格瓦斯配着来；给宝宝点清淡的汤面", "searchKeyword": "布尔津 河堤夜市" }
+        {
+          "meal": "breakfast",
+          "title": "禾木民宿早餐",
+          "detail": "吃得暖和再出发"
+        },
+        {
+          "meal": "lunch",
+          "title": "布尔津午餐",
+          "detail": "县城选择多，回锅肉拌面、椒麻鸡",
+          "searchKeyword": "布尔津 餐厅"
+        },
+        {
+          "meal": "dinner",
+          "title": "河堤夜市",
+          "detail": "烤狗鱼必吃，格瓦斯配着来；给宝宝点清淡的汤面",
+          "searchKeyword": "布尔津 河堤夜市"
+        }
       ],
       "prep": {
-        "clothing": ["五彩滩日落时分气温骤降，厚外套随身", "风大，帽子护耳"],
-        "tips": ["五彩滩蚊子曾很有名，9月底已少，仍可备驱蚊液", "夜市烤鱼按条卖，先问价再点"]
+        "clothing": [
+          "五彩滩日落时分气温骤降，厚外套随身",
+          "风大，帽子护耳"
+        ],
+        "tips": [
+          "五彩滩蚊子曾很有名，9月底已少，仍可备驱蚊液",
+          "夜市烤鱼按条卖，先问价再点"
+        ]
       }
     },
     {
       "date": "2026-09-30",
       "dayIndex": 8,
-      "route": { "from": "布尔津", "to": "克拉玛依", "driveTime": "4h" },
-      "lodging": { "city": "克拉玛依", "hotel": "锦江都城 / 亚朵酒店（暂定）", "location": [84.874, 45.579], "nights": 1 },
+      "route": {
+        "from": "布尔津",
+        "to": "克拉玛依",
+        "driveTime": "4h"
+      },
+      "lodging": {
+        "city": "克拉玛依",
+        "hotel": "和颐酒店（克拉玛依百瑞广场石油大厦店）",
+        "location": [
+          84.874,
+          45.579
+        ],
+        "nights": 1,
+        "booking": "携程"
+      },
       "strength": "medium",
-      "highlights": ["黑油山公园", "路边雅丹地貌与磕头机"],
+      "highlights": [
+        "黑油山公园",
+        "路边雅丹地貌与磕头机"
+      ],
       "scenery": "进入克拉玛依后，路边开始出现雅丹地貌和密集的「磕头机」（抽油机），一路都是工业奇观。",
       "map": {
         "places": [
-          { "name": "布尔津县城", "type": "lodging", "location": [86.863, 47.702] },
-          { "name": "黑油山公园", "type": "scenic", "location": [84.870, 45.607], "note": "天然沥青丘，油泡咕嘟咕嘟" },
-          { "name": "克拉玛依市区", "type": "lodging", "location": [84.874, 45.579] }
+          {
+            "name": "和颐酒店（克拉玛依百瑞广场石油大厦店）",
+            "type": "lodging",
+            "location": [
+              86.863,
+              47.702
+            ]
+          },
+          {
+            "name": "黑油山公园",
+            "type": "scenic",
+            "location": [
+              84.87,
+              45.607
+            ],
+            "note": "天然沥青丘，油泡咕嘟咕嘟"
+          },
+          {
+            "name": "和颐酒店（克拉玛依百瑞广场石油大厦店）",
+            "type": "lodging",
+            "location": [
+              84.874,
+              45.579
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "布尔津出发", "detail": "全程高速+国道，中途服务区休息一次", "duration": "约4h车程" },
-        { "time": "13:00", "title": "抵达克拉玛依午餐", "detail": "市区餐饮成熟，随便挑评分高的" },
-        { "time": "14:30", "title": "黑油山公园", "detail": "看天然冒油的沥青丘，园内步道平坦，宝宝可跑", "duration": "约1.5h" },
-        { "time": "17:00", "title": "入住休整", "detail": "克拉玛依城市规整，晚上可以逛逛世纪公园" }
+        {
+          "time": "09:00",
+          "title": "布尔津出发",
+          "detail": "全程高速+国道，中途服务区休息一次",
+          "duration": "约4h车程"
+        },
+        {
+          "time": "13:00",
+          "title": "抵达克拉玛依午餐",
+          "detail": "市区餐饮成熟，随便挑评分高的"
+        },
+        {
+          "time": "14:30",
+          "title": "黑油山公园",
+          "detail": "看天然冒油的沥青丘，园内步道平坦，宝宝可跑",
+          "duration": "约1.5h"
+        },
+        {
+          "time": "17:00",
+          "title": "入住休整",
+          "detail": "克拉玛依城市规整，晚上可以逛逛世纪公园"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "布尔津早餐", "searchKeyword": "布尔津 早餐" },
-        { "meal": "lunch", "title": "克拉玛依午餐", "detail": "新疆家常菜大盘出品", "searchKeyword": "克拉玛依 餐厅" },
-        { "meal": "dinner", "title": "克拉玛依晚餐", "detail": "城市里选择多，给宝宝补一顿好消化的", "searchKeyword": "克拉玛依 美食" }
+        {
+          "meal": "breakfast",
+          "title": "布尔津早餐",
+          "searchKeyword": "布尔津 早餐"
+        },
+        {
+          "meal": "lunch",
+          "title": "克拉玛依午餐",
+          "detail": "新疆家常菜大盘出品",
+          "searchKeyword": "克拉玛依 餐厅"
+        },
+        {
+          "meal": "dinner",
+          "title": "克拉玛依晚餐",
+          "detail": "城市里选择多，给宝宝补一顿好消化的",
+          "searchKeyword": "克拉玛依 美食"
+        }
       ],
       "prep": {
-        "clothing": ["戈壁沿线干燥风大，润肤霜、唇膏", "白天日晒强"],
-        "tips": ["今晚整理行李：明天长途+换城市，把吐鲁番要用的轻薄衣物放到易拿位置", "检查油量，明早加满出发"]
+        "clothing": [
+          "戈壁沿线干燥风大，润肤霜、唇膏",
+          "白天日晒强"
+        ],
+        "tips": [
+          "今晚整理行李：明天长途+换城市，把吐鲁番要用的轻薄衣物放到易拿位置",
+          "检查油量，明早加满出发"
+        ]
       }
     },
     {
       "date": "2026-10-01",
       "dayIndex": 9,
-      "route": { "from": "克拉玛依", "to": "吐鲁番", "driveTime": "5.5h" },
-      "lodging": { "city": "吐鲁番", "hotel": "亚朵酒店 / 恒美酒店（暂定）", "location": [89.186, 42.951], "nights": 2 },
+      "route": {
+        "from": "克拉玛依",
+        "to": "吐鲁番",
+        "driveTime": "5.5h"
+      },
+      "lodging": {
+        "city": "吐鲁番",
+        "hotel": "全季酒店（吐鲁番夜市店）",
+        "location": [
+          89.186,
+          42.951
+        ],
+        "nights": 2,
+        "booking": "携程"
+      },
       "strength": "hard",
-      "highlights": ["横穿戈壁", "吐鲁番葡萄夜市"],
+      "highlights": [
+        "横穿戈壁",
+        "吐鲁番葡萄夜市"
+      ],
       "scenery": "茫茫戈壁，较为枯燥，注意防疲劳驾驶；接近吐鲁番时山体逐渐出现红层，别有一番荒凉感。",
       "map": {
         "places": [
-          { "name": "克拉玛依市区", "type": "lodging", "location": [84.874, 45.579] },
-          { "name": "奎屯/石河子服务区", "type": "transfer", "location": [84.886, 44.424], "note": "午餐+休整点" },
-          { "name": "吐鲁番市区", "type": "lodging", "location": [89.186, 42.951] }
+          {
+            "name": "全季酒店（吐鲁番夜市店）",
+            "type": "lodging",
+            "location": [
+              84.874,
+              45.579
+            ]
+          },
+          {
+            "name": "奎屯/石河子服务区",
+            "type": "transfer",
+            "location": [
+              84.886,
+              44.424
+            ],
+            "note": "午餐+休整点"
+          },
+          {
+            "name": "全季酒店（吐鲁番夜市店）",
+            "type": "lodging",
+            "location": [
+              89.186,
+              42.951
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "克拉玛依出发", "detail": "出发前加满油、检查胎压", "duration": "5.5h车程" },
-        { "time": "12:00", "title": "奎屯或石河子服务区", "detail": "午餐+宝宝放风，服务区餐食一般，可自带", "duration": "约1h" },
-        { "time": "15:30", "title": "抵达吐鲁番", "detail": "入住后休息，今天不安排景点" },
-        { "time": "18:00", "title": "葡萄夜市", "detail": "凉爽的傍晚逛吃逛吃" }
+        {
+          "time": "09:00",
+          "title": "克拉玛依出发",
+          "detail": "出发前加满油、检查胎压",
+          "duration": "5.5h车程"
+        },
+        {
+          "time": "12:00",
+          "title": "奎屯或石河子服务区",
+          "detail": "午餐+宝宝放风，服务区餐食一般，可自带",
+          "duration": "约1h"
+        },
+        {
+          "time": "15:30",
+          "title": "抵达吐鲁番",
+          "detail": "入住后休息，今天不安排景点"
+        },
+        {
+          "time": "18:00",
+          "title": "葡萄夜市",
+          "detail": "凉爽的傍晚逛吃逛吃"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "酒店早餐", "detail": "吃饱再上路" },
-        { "meal": "lunch", "title": "服务区简餐/自带", "detail": "面包、馕、水果" },
-        { "meal": "dinner", "title": "葡萄夜市", "detail": "烤全羊串、烤包子、酸奶刨冰", "searchKeyword": "吐鲁番 葡萄夜市" }
+        {
+          "meal": "breakfast",
+          "title": "酒店早餐",
+          "detail": "吃饱再上路"
+        },
+        {
+          "meal": "lunch",
+          "title": "服务区简餐/自带",
+          "detail": "面包、馕、水果"
+        },
+        {
+          "meal": "dinner",
+          "title": "葡萄夜市",
+          "detail": "烤全羊串、烤包子、酸奶刨冰",
+          "searchKeyword": "吐鲁番 葡萄夜市"
+        }
       ],
       "prep": {
-        "clothing": ["吐鲁番白天还可能有30°C+，短袖+防晒衣切换", "早晚凉，备薄外套"],
-        "carry": ["明天沙漠装备今天备好：玩沙工具、防风镜、纱巾"],
-        "tips": ["国庆首日车流大，高速多留时间", "酒店连住2晚，行李可全拿进房间"]
+        "clothing": [
+          "吐鲁番白天还可能有30°C+，短袖+防晒衣切换",
+          "早晚凉，备薄外套"
+        ],
+        "carry": [
+          "明天沙漠装备今天备好：玩沙工具、防风镜、纱巾"
+        ],
+        "tips": [
+          "国庆首日车流大，高速多留时间",
+          "酒店连住2晚，行李可全拿进房间"
+        ]
       }
     },
     {
       "date": "2026-10-02",
       "dayIndex": 10,
-      "route": { "from": "吐鲁番", "to": "吐鲁番", "driveTime": "1h + 1h" },
-      "lodging": { "city": "吐鲁番", "hotel": "亚朵酒店 / 恒美酒店（暂定）", "location": [89.186, 42.951], "nights": 2 },
+      "route": {
+        "from": "吐鲁番",
+        "to": "吐鲁番",
+        "driveTime": "1h + 1h"
+      },
+      "lodging": {
+        "city": "吐鲁番",
+        "hotel": "全季酒店（吐鲁番夜市店）",
+        "location": [
+          89.186,
+          42.951
+        ],
+        "nights": 2,
+        "booking": "携程"
+      },
       "strength": "medium",
-      "highlights": ["火焰山", "麻扎村", "坎儿井", "库木塔格沙漠日落"],
+      "highlights": [
+        "火焰山",
+        "麻扎村",
+        "坎儿井",
+        "库木塔格沙漠日落"
+      ],
       "map": {
         "places": [
-          { "name": "火焰山", "type": "scenic", "location": [89.718, 42.929], "note": "地表温度高，速战速决" },
-          { "name": "吐峪沟麻扎村", "type": "scenic", "location": [89.692, 42.878], "note": "土黄色的千年古村" },
-          { "name": "坎儿井乐园", "type": "scenic", "location": [89.181, 42.947], "note": "地下水利奇观，凉爽" },
-          { "name": "库木塔格沙漠", "type": "scenic", "location": [90.246, 42.857], "note": "鄯善县，城市边的沙漠" },
-          { "name": "吐鲁番市区", "type": "lodging", "location": [89.186, 42.951] }
+          {
+            "name": "火焰山",
+            "type": "scenic",
+            "location": [
+              89.718,
+              42.929
+            ],
+            "note": "地表温度高，速战速决"
+          },
+          {
+            "name": "吐峪沟麻扎村",
+            "type": "scenic",
+            "location": [
+              89.692,
+              42.878
+            ],
+            "note": "土黄色的千年古村"
+          },
+          {
+            "name": "坎儿井乐园",
+            "type": "scenic",
+            "location": [
+              89.181,
+              42.947
+            ],
+            "note": "地下水利奇观，凉爽"
+          },
+          {
+            "name": "库木塔格沙漠",
+            "type": "scenic",
+            "location": [
+              90.246,
+              42.857
+            ],
+            "note": "鄯善县，城市边的沙漠"
+          },
+          {
+            "name": "全季酒店（吐鲁番夜市店）",
+            "type": "lodging",
+            "location": [
+              89.186,
+              42.951
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "火焰山打卡", "detail": "经典西游场景，大温度计拍照，趁上午凉快速战速决", "duration": "约1h" },
-        { "time": "10:30", "title": "吐峪沟麻扎村", "detail": "火焰山脚下的维吾尔古村落，土坯房巷道很好拍", "duration": "约1.5h" },
-        { "time": "13:00", "title": "回市区午餐+午休", "detail": "宝宝午睡是今天的关键任务" },
-        { "time": "15:30", "title": "坎儿井乐园", "detail": "地下渠道凉爽宜人，顺便了解吐鲁番的地下水智慧", "duration": "约1.5h" },
-        { "time": "17:30", "title": "出发库木塔格沙漠", "detail": "前往鄯善县，车程约1小时", "duration": "1h车程" },
-        { "time": "18:30", "title": "沙漠玩沙+日落", "detail": "「城市与沙漠零距离」，滑沙、赤脚踩沙，看日落把沙丘染金", "duration": "约2h" },
-        { "time": "20:30", "title": "返回市区晚餐", "detail": "回吐鲁番约1小时" }
+        {
+          "time": "09:00",
+          "title": "火焰山打卡",
+          "detail": "经典西游场景，大温度计拍照，趁上午凉快速战速决",
+          "duration": "约1h"
+        },
+        {
+          "time": "10:30",
+          "title": "吐峪沟麻扎村",
+          "detail": "火焰山脚下的维吾尔古村落，土坯房巷道很好拍",
+          "duration": "约1.5h"
+        },
+        {
+          "time": "13:00",
+          "title": "回市区午餐+午休",
+          "detail": "宝宝午睡是今天的关键任务"
+        },
+        {
+          "time": "15:30",
+          "title": "坎儿井乐园",
+          "detail": "地下渠道凉爽宜人，顺便了解吐鲁番的地下水智慧",
+          "duration": "约1.5h"
+        },
+        {
+          "time": "17:30",
+          "title": "出发库木塔格沙漠",
+          "detail": "前往鄯善县，车程约1小时",
+          "duration": "1h车程"
+        },
+        {
+          "time": "18:30",
+          "title": "沙漠玩沙+日落",
+          "detail": "「城市与沙漠零距离」，滑沙、赤脚踩沙，看日落把沙丘染金",
+          "duration": "约2h"
+        },
+        {
+          "time": "20:30",
+          "title": "返回市区晚餐",
+          "detail": "回吐鲁番约1小时"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "酒店早餐", "detail": "吃扎实，上午两个景点" },
-        { "meal": "lunch", "title": "市区午餐", "detail": "拌面、抓饭", "searchKeyword": "吐鲁番 拌面" },
-        { "meal": "dinner", "title": "市区晚餐", "detail": "沙漠回来较晚，选市区评分高的炒菜馆", "searchKeyword": "吐鲁番 餐厅" }
+        {
+          "meal": "breakfast",
+          "title": "酒店早餐",
+          "detail": "吃扎实，上午两个景点"
+        },
+        {
+          "meal": "lunch",
+          "title": "市区午餐",
+          "detail": "拌面、抓饭",
+          "searchKeyword": "吐鲁番 拌面"
+        },
+        {
+          "meal": "dinner",
+          "title": "市区晚餐",
+          "detail": "沙漠回来较晚，选市区评分高的炒菜馆",
+          "searchKeyword": "吐鲁番 餐厅"
+        }
       ],
       "prep": {
-        "clothing": ["白天短袖防晒衣，沙漠日落后再加外套", "沙漠光脚穿凉鞋更方便，备湿巾擦沙"],
-        "carry": ["玩沙工具（铲子小桶）", "防风镜/纱巾（防风沙）", "充足饮用水"],
-        "tickets": [
-          { "title": "坎儿井乐园", "detail": "现场购票即可", "status": "todo" },
-          { "title": "库木塔格沙漠", "detail": "现场购票；滑沙板景区可租", "status": "todo" }
+        "clothing": [
+          "白天短袖防晒衣，沙漠日落后再加外套",
+          "沙漠光脚穿凉鞋更方便，备湿巾擦沙"
         ],
-        "tips": ["火焰山地表极烫，别让宝宝久留地表", "沙进眼睛用净水冲，别揉"]
+        "carry": [
+          "玩沙工具（铲子小桶）",
+          "防风镜/纱巾（防风沙）",
+          "充足饮用水"
+        ],
+        "tickets": [
+          {
+            "title": "坎儿井乐园",
+            "detail": "现场购票即可",
+            "status": "todo"
+          },
+          {
+            "title": "库木塔格沙漠",
+            "detail": "现场购票；滑沙板景区可租",
+            "status": "todo"
+          }
+        ],
+        "tips": [
+          "火焰山地表极烫，别让宝宝久留地表",
+          "沙进眼睛用净水冲，别揉"
+        ]
       }
     },
     {
       "date": "2026-10-03",
       "dayIndex": 11,
-      "route": { "from": "吐鲁番", "to": "乌鲁木齐", "driveTime": "3h" },
-      "lodging": { "city": "乌鲁木齐", "hotel": "友好大酒店（暂定）", "location": [87.598, 43.809], "nights": 2 },
+      "route": {
+        "from": "吐鲁番",
+        "to": "乌鲁木齐",
+        "driveTime": "3h"
+      },
+      "lodging": {
+        "city": "乌鲁木齐",
+        "hotel": "红山公园扬子江路亚朵酒店",
+        "location": [
+          87.598,
+          43.809
+        ],
+        "nights": 2,
+        "booking": "小程序"
+      },
       "strength": "medium",
-      "highlights": ["葡萄沟青蛙巷", "国际大巴扎"],
+      "highlights": [
+        "葡萄沟青蛙巷",
+        "国际大巴扎"
+      ],
       "map": {
         "places": [
-          { "name": "葡萄沟·青蛙巷", "type": "scenic", "location": [89.190, 42.975], "note": "葡萄架下的网红巷子" },
-          { "name": "吐鲁番市区", "type": "food", "location": [89.186, 42.951], "note": "午餐后退房" },
-          { "name": "国际大巴扎", "type": "food", "location": [87.630, 43.794], "note": "晚上逛" },
-          { "name": "乌鲁木齐市区", "type": "lodging", "location": [87.598, 43.809] }
+          {
+            "name": "葡萄沟·青蛙巷",
+            "type": "scenic",
+            "location": [
+              89.19,
+              42.975
+            ],
+            "note": "葡萄架下的网红巷子"
+          },
+          {
+            "name": "吐鲁番市区",
+            "type": "food",
+            "location": [
+              89.186,
+              42.951
+            ],
+            "note": "午餐后退房"
+          },
+          {
+            "name": "国际大巴扎",
+            "type": "food",
+            "location": [
+              87.63,
+              43.794
+            ],
+            "note": "晚上逛"
+          },
+          {
+            "name": "红山公园扬子江路亚朵酒店",
+            "type": "lodging",
+            "location": [
+              87.598,
+              43.809
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:30", "title": "葡萄沟·青蛙巷", "detail": "葡萄架下拍照，9月底晚熟品种还挂果；巷子里适合宝宝撒欢", "duration": "约2h" },
-        { "time": "12:00", "title": "午餐", "detail": "回市区吃，然后回酒店收拾退房" },
-        { "time": "13:30", "title": "出发乌鲁木齐", "detail": "高速约3小时，宝宝车上午睡", "duration": "3h车程" },
-        { "time": "17:00", "title": "入住市区酒店", "detail": "连住2晚，行李全部安顿好" },
-        { "time": "18:30", "title": "国际大巴扎", "detail": "伊斯兰建筑风格的集市，看歌舞、买手信、吃晚饭一条龙" }
+        {
+          "time": "09:30",
+          "title": "葡萄沟·青蛙巷",
+          "detail": "葡萄架下拍照，9月底晚熟品种还挂果；巷子里适合宝宝撒欢",
+          "duration": "约2h"
+        },
+        {
+          "time": "12:00",
+          "title": "午餐",
+          "detail": "回市区吃，然后回酒店收拾退房"
+        },
+        {
+          "time": "13:30",
+          "title": "出发乌鲁木齐",
+          "detail": "高速约3小时，宝宝车上午睡",
+          "duration": "3h车程"
+        },
+        {
+          "time": "17:00",
+          "title": "入住市区酒店",
+          "detail": "连住2晚，行李全部安顿好"
+        },
+        {
+          "time": "18:30",
+          "title": "国际大巴扎",
+          "detail": "伊斯兰建筑风格的集市，看歌舞、买手信、吃晚饭一条龙"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "酒店早餐", "detail": "最后一天在吐鲁番，早餐多吃葡萄哈密瓜" },
-        { "meal": "lunch", "title": "吐鲁番告别餐", "detail": "烤包子+抓饭", "searchKeyword": "吐鲁番 烤包子" },
-        { "meal": "dinner", "title": "大巴扎内晚餐", "detail": "人多热闹，看表演吃晚饭；留意宝宝别走散", "searchKeyword": "乌鲁木齐 国际大巴扎" }
+        {
+          "meal": "breakfast",
+          "title": "酒店早餐",
+          "detail": "最后一天在吐鲁番，早餐多吃葡萄哈密瓜"
+        },
+        {
+          "meal": "lunch",
+          "title": "吐鲁番告别餐",
+          "detail": "烤包子+抓饭",
+          "searchKeyword": "吐鲁番 烤包子"
+        },
+        {
+          "meal": "dinner",
+          "title": "大巴扎内晚餐",
+          "detail": "人多热闹，看表演吃晚饭；留意宝宝别走散",
+          "searchKeyword": "乌鲁木齐 国际大巴扎"
+        }
       ],
       "shopping": [
-        { "title": "大巴扎手信", "detail": "葡萄干、巴旦木、和田玉枣、艾德莱斯绸小物；大巴扎价格偏高，可对比后两天市区干果店再买" }
+        {
+          "title": "大巴扎手信",
+          "detail": "葡萄干、巴旦木、和田玉枣、艾德莱斯绸小物；大巴扎价格偏高，可对比后两天市区干果店再买"
+        }
       ],
       "prep": {
-        "carry": ["明天进博物馆需要预约（今天记得约）", "大巴扎人多，给宝宝穿亮色衣服好认"],
-        "tips": ["青蛙巷属葡萄沟景区，门票现场买", "国庆期间大巴扎人流量大，贵重物品随身"]
+        "carry": [
+          "明天进博物馆需要预约（今天记得约）",
+          "大巴扎人多，给宝宝穿亮色衣服好认"
+        ],
+        "tips": [
+          "青蛙巷属葡萄沟景区，门票现场买",
+          "国庆期间大巴扎人流量大，贵重物品随身"
+        ]
       }
     },
     {
       "date": "2026-10-04",
       "dayIndex": 12,
-      "route": { "from": "乌鲁木齐", "to": "乌鲁木齐", "driveTime": null },
-      "lodging": { "city": "乌鲁木齐", "hotel": "友好大酒店（暂定）", "location": [87.598, 43.809], "nights": 2 },
+      "route": {
+        "from": "乌鲁木齐",
+        "to": "乌鲁木齐",
+        "driveTime": null
+      },
+      "lodging": {
+        "city": "乌鲁木齐",
+        "hotel": "红山公园扬子江路亚朵酒店",
+        "location": [
+          87.598,
+          43.809
+        ],
+        "nights": 2,
+        "booking": "小程序"
+      },
       "strength": "easy",
-      "highlights": ["新疆博物馆", "红山公园", "干果采购"],
+      "highlights": [
+        "新疆博物馆",
+        "红山公园",
+        "干果采购"
+      ],
       "map": {
         "places": [
-          { "name": "新疆博物馆", "type": "scenic", "location": [87.598, 43.809], "note": "需提前公众号预约" },
-          { "name": "红山公园", "type": "scenic", "location": [87.604, 43.806], "note": "市区登高看全城" },
-          { "name": "市区酒店", "type": "lodging", "location": [87.598, 43.809] }
+          {
+            "name": "新疆博物馆",
+            "type": "scenic",
+            "location": [
+              87.598,
+              43.809
+            ],
+            "note": "需提前公众号预约"
+          },
+          {
+            "name": "红山公园",
+            "type": "scenic",
+            "location": [
+              87.604,
+              43.806
+            ],
+            "note": "市区登高看全城"
+          },
+          {
+            "name": "红山公园扬子江路亚朵酒店",
+            "type": "lodging",
+            "location": [
+              87.598,
+              43.809
+            ]
+          }
         ]
       },
       "timeline": [
-        { "time": "09:30", "title": "新疆博物馆", "detail": "「楼兰美女」干尸和丝路文物是镇馆之宝，免费但必须提前预约", "duration": "约2.5h" },
-        { "time": "12:30", "title": "午餐", "detail": "博物馆周边或回酒店附近，选老牌新疆菜馆" },
-        { "time": "15:00", "title": "红山公园 或 干果采购", "detail": "看宝宝状态二选一：登红山眺望市区，或去华凌/东环干果批发市场采购手信" },
-        { "time": "18:00", "title": "回酒店整理行李", "detail": "为明天还车做准备：车内物品清空、加油" }
+        {
+          "time": "09:30",
+          "title": "新疆博物馆",
+          "detail": "「楼兰美女」干尸和丝路文物是镇馆之宝，免费但必须提前预约",
+          "duration": "约2.5h"
+        },
+        {
+          "time": "12:30",
+          "title": "午餐",
+          "detail": "博物馆周边或回酒店附近，选老牌新疆菜馆"
+        },
+        {
+          "time": "15:00",
+          "title": "红山公园 或 干果采购",
+          "detail": "看宝宝状态二选一：登红山眺望市区，或去华凌/东环干果批发市场采购手信"
+        },
+        {
+          "time": "18:00",
+          "title": "回酒店整理行李",
+          "detail": "为明天还车做准备：车内物品清空、加油"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "酒店早餐", "detail": "不赶时间，慢慢吃" },
-        { "meal": "lunch", "title": "新疆菜正餐", "detail": "大盘鸡、椒麻鸡、酸奶粽子都值得", "searchKeyword": "乌鲁木齐 大盘鸡" },
-        { "meal": "dinner", "title": "最后的新疆晚餐", "detail": "选一家这几天最想念的口味，好好收尾", "searchKeyword": "乌鲁木齐 美食" }
+        {
+          "meal": "breakfast",
+          "title": "酒店早餐",
+          "detail": "不赶时间，慢慢吃"
+        },
+        {
+          "meal": "lunch",
+          "title": "新疆菜正餐",
+          "detail": "大盘鸡、椒麻鸡、酸奶粽子都值得",
+          "searchKeyword": "乌鲁木齐 大盘鸡"
+        },
+        {
+          "meal": "dinner",
+          "title": "最后的新疆晚餐",
+          "detail": "选一家这几天最想念的口味，好好收尾",
+          "searchKeyword": "乌鲁木齐 美食"
+        }
       ],
       "shopping": [
-        { "title": "干果手信采购", "detail": "推荐东环大市场或华凌市场，比大巴扎实惠；葡萄干、红枣、巴旦木、无花果干按需买，可快递直接寄回家" }
+        {
+          "title": "干果手信采购",
+          "detail": "推荐东环大市场或华凌市场，比大巴扎实惠；葡萄干、红枣、巴旦木、无花果干按需买，可快递直接寄回家"
+        }
       ],
       "prep": {
         "tickets": [
-          { "title": "新疆博物馆预约", "detail": "「新疆维吾尔自治区博物馆」公众号预约，周一闭馆（10.4为周日，正常开放）；大人身份证+宝宝可免预约或随行", "status": "todo" }
+          {
+            "title": "新疆博物馆预约",
+            "detail": "「新疆维吾尔自治区博物馆」公众号预约，周一闭馆（10.4为周日，正常开放）；大人身份证+宝宝可免预约或随行",
+            "status": "todo"
+          }
         ],
-        "carry": ["还车前：清空车内、加满油（问清取车时的油量规则）"],
-        "tips": ["今天纯市区，步行+短程打车即可，车停酒店休息", "给行李留出干燥防压的角落放干果"]
+        "carry": [
+          "还车前：清空车内、加满油（问清取车时的油量规则）"
+        ],
+        "tips": [
+          "今天纯市区，步行+短程打车即可，车停酒店休息",
+          "给行李留出干燥防压的角落放干果"
+        ]
       }
     },
     {
       "date": "2026-10-05",
       "dayIndex": 13,
-      "route": { "from": "乌鲁木齐市区", "to": "地窝堡机场", "driveTime": "40min" },
+      "route": {
+        "from": "乌鲁木齐市区",
+        "to": "地窝堡机场",
+        "driveTime": "40min"
+      },
       "lodging": null,
       "strength": "easy",
-      "highlights": ["自然醒，返程"],
+      "highlights": [
+        "自然醒，返程"
+      ],
       "map": {
         "places": [
-          { "name": "市区酒店", "type": "lodging", "location": [87.598, 43.809] },
-          { "name": "地窝堡国际机场", "type": "transfer", "location": [87.473, 43.907], "note": "还车+值机" }
+          {
+            "name": "市区酒店",
+            "type": "lodging",
+            "location": [
+              87.598,
+              43.809
+            ]
+          },
+          {
+            "name": "地窝堡国际机场",
+            "type": "transfer",
+            "location": [
+              87.473,
+              43.907
+            ],
+            "note": "还车+值机"
+          }
         ]
       },
       "timeline": [
-        { "time": "09:00", "title": "自然醒，早餐后退房", "detail": "不赶早，给行李和宝宝都留缓冲" },
-        { "time": "10:30", "title": "出发去机场", "detail": "车程约40分钟；国庆返程高峰，多留时间", "duration": "40min车程" },
-        { "time": "11:30", "title": "还车、值机", "detail": "还车流程：验车、签字；预留2小时+安检排队时间" },
-        { "time": "16:00", "title": "航班返程", "detail": "一路顺风，回家！" }
+        {
+          "time": "09:00",
+          "title": "自然醒，早餐后退房",
+          "detail": "不赶早，给行李和宝宝都留缓冲"
+        },
+        {
+          "time": "10:30",
+          "title": "出发去机场",
+          "detail": "车程约40分钟；国庆返程高峰，多留时间",
+          "duration": "40min车程"
+        },
+        {
+          "time": "11:30",
+          "title": "还车、值机",
+          "detail": "还车流程：验车、签字；预留2小时+安检排队时间"
+        },
+        {
+          "time": "16:00",
+          "title": "航班返程",
+          "detail": "一路顺风，回家！"
+        }
       ],
       "food": [
-        { "meal": "breakfast", "title": "酒店早餐或附近牛肉面", "searchKeyword": "乌鲁木齐 早餐" },
-        { "meal": "lunch", "title": "机场简餐", "detail": "机场餐饮一般，可带馕和干果上机" }
+        {
+          "meal": "breakfast",
+          "title": "酒店早餐或附近牛肉面",
+          "searchKeyword": "乌鲁木齐 早餐"
+        },
+        {
+          "meal": "lunch",
+          "title": "机场简餐",
+          "detail": "机场餐饮一般，可带馕和干果上机"
+        }
       ],
       "prep": {
-        "carry": ["登机物品：身份证、宝宝出生证明（值机可能查）", "液体注意安检规定，奶粉奶瓶可过检"],
-        "tips": ["还车前拍里程表和油表照片", "机场免税店/干果店是最后补货机会（价格不如市区）"]
+        "carry": [
+          "登机物品：身份证、宝宝出生证明（值机可能查）",
+          "液体注意安检规定，奶粉奶瓶可过检"
+        ],
+        "tips": [
+          "还车前拍里程表和油表照片",
+          "机场免税店/干果店是最后补货机会（价格不如市区）"
+        ]
       }
     }
   ]

@@ -228,3 +228,10 @@ button { font: inherit; cursor: pointer; }
   margin-top: 10px; font-size: 13px; line-height: 1.6;
   color: var(--text-light); word-break: break-all;
 }
+
+/* ---------- 预定渠道徽标 ---------- */
+.chip--booking {
+  display: inline-block; vertical-align: middle; margin-left: 6px;
+  background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;
+  padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600;
+}
