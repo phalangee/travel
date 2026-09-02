@@ -8,6 +8,19 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
+  <script>
+    // 强制清理旧 Service Worker 和缓存，确保加载最新代码
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        regs.forEach(function(r) { r.unregister(); });
+      });
+      if (typeof caches !== 'undefined' && caches.keys) {
+        caches.keys().then(function(names) {
+          names.forEach(function(n) { caches.delete(n); });
+        });
+      }
+    }
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -35,17 +48,6 @@
   <script src="js/map.js?v=17"></script>
   <script src="js/home.js?v=17"></script>
   <script>
-    // 强制清理旧 Service Worker 缓存，确保加载最新代码
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(regs) {
-        regs.forEach(function(r) { r.unregister(); });
-      });
-      if (caches && caches.keys) {
-        caches.keys().then(function(names) {
-          names.forEach(function(n) { caches.delete(n); });
-        });
-      }
-    }
     // 重新注册 SW（使用新缓存版本）
     if (location.protocol.startsWith('http')) {
       navigator.serviceWorker.register('sw.js').catch(function (e) {
