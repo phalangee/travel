@@ -44,7 +44,7 @@ function loadAMap(callback) {
     window.AMapLoader.load({
       key: CONFIG.amapKey,
       version: '2.0',
-      plugins: ['AMap.Scale', 'AMap.ToolBar']
+      plugins: ['AMap.Scale', 'AMap.ToolBar', 'AMap.Driving']
     }).then(function () {
       // AMapLoader.load 返回的是模块对象，不是 AMap 本身
       // 加载完成后 window.AMap 已被设置，使用全局的 window.AMap
@@ -169,29 +169,100 @@ function renderLoading(container) {
   container.appendChild(p);
 }
 
-/* ---------- 覆盖物绘制（标记 + 可选折线 + 自动视野） ---------- */
+/* ---------- 覆盖物绘制：地名标记 + 真实驾车路线 + 自动视野 ---------- */
+
+/* 驾车路线坐标缓存：同一组途经点只请求一次规划，
+ * 共享地图在日程卡之间搬家时零重复请求（离线/失败回退为直线折线）。 */
+var routePathCache = {};
+
+function drawPolyline(map, path, weight) {
+  var line = new AMap.Polyline({
+    path: path,
+    strokeColor: '#3b82f6',
+    strokeWeight: weight || 5,
+    strokeOpacity: 0.9,
+    strokeStyle: 'solid',
+    showDir: true,
+    lineJoin: 'round'
+  });
+  map.add(line);
+  return line;
+}
+
+/* 用 AMap.Driving 获取实际道路路线并画线；pts 顺序为途经顺序。
+ * 途经点上限 16：超出时按 17 个一段分段请求后首尾拼接。 */
+function drawDrivingRoute(map, pts) {
+  var cacheKey = pts.map(function (p) { return p.location.join(','); }).join(';');
+  var cached = routePathCache[cacheKey];
+  if (cached) {
+    if (cached.length) { drawPolyline(map, cached); map.setFitView(); }
+    return;
+  }
+
+  // 先画直线折线兜底，规划返回后替换为真实路线
+  var straight = drawPolyline(map, pts.map(function (p) { return p.location; }), 3);
+
+  var finish = function (path) {
+    routePathCache[cacheKey] = path || [];
+    if (!path || !path.length) return; // 失败：保留直线折线
+    try { map.remove(straight); } catch (e) { /* ignore */ }
+    drawPolyline(map, path, 5);
+    map.setFitView();
+  };
+
+  var searchSeg = function (seg) {
+    var driving = new AMap.Driving({ policy: 0 });
+    var opts = {};
+    if (seg.length > 2) opts.waypoints = seg.slice(1, -1).map(function (p) { return p.location; });
+    driving.search(seg[0].location, seg[seg.length - 1].location, opts, function (status, result) {
+      var path = [];
+      if (status === 'complete' && result.routes && result.routes[0]) {
+        result.routes[0].steps.forEach(function (step) {
+          (step.path || []).forEach(function (ll) { path.push([ll.lng, ll.lat]); });
+        });
+      }
+      finish(path);
+    });
+  };
+
+  if (pts.length <= 18) {
+    searchSeg(pts);
+  } else {
+    // 分段：每段 17 点（起点+15 途经点+终点），段间共享衔接点
+    var all = [];
+    for (var i = 0; i < pts.length - 1; i += 16) {
+      all.push(pts.slice(i, Math.min(i + 17, pts.length)));
+    }
+    var pending = all.length, merged = [];
+    all.forEach(function (seg) {
+      var driving = new AMap.Driving({ policy: 0 });
+      var opts = {};
+      if (seg.length > 2) opts.waypoints = seg.slice(1, -1).map(function (p) { return p.location; });
+      driving.search(seg[0].location, seg[seg.length - 1].location, opts, function (status, result) {
+        if (status === 'complete' && result.routes && result.routes[0]) {
+          result.routes[0].steps.forEach(function (step) {
+            (step.path || []).forEach(function (ll) { merged.push([ll.lng, ll.lat]); });
+          });
+        }
+        if (--pending === 0) finish(merged.length ? merged : null);
+      });
+    });
+  }
+}
+
 function applyPlacesToMap(map, pts, drawPath) {
   pts.forEach(function (p, i) {
     map.add(new AMap.Marker({
       position: p.location,
       title: p.name,
       label: {
-        content: String(i + 1),
-        offset: new AMap.Pixel(0, 0),
-        direction: 'bottom'
+        content: (i + 1) + '. ' + p.name,
+        offset: new AMap.Pixel(0, -4),
+        direction: 'top'
       }
     }));
   });
-  if (drawPath && pts.length > 1) {
-    map.add(new AMap.Polyline({
-      path: pts.map(function (p) { return p.location; }),
-      strokeColor: '#3b82f6',
-      strokeWeight: 3,
-      strokeOpacity: 0.9,
-      strokeStyle: 'solid',
-      showDir: true
-    }));
-  }
+  if (drawPath && pts.length > 1) drawDrivingRoute(map, pts);
   map.setFitView(null, false, [40, 40, 40, 40]);
 }
 
@@ -277,7 +348,7 @@ function initDeckMaps(specs) {
           sharedDeckMap.owner = spec.container;
           sharedDeckMap.map.clearMap();
         }
-        applyPlacesToMap(sharedDeckMap.map, spec.pts, false);
+        applyPlacesToMap(sharedDeckMap.map, spec.pts, true);
         sharedDeckMap.map.resize();
       } catch (e) {
         console.error('[Map] 共享地图切换失败:', e);

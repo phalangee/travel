@@ -1,7 +1,7 @@
 /* Service Worker：App Shell + 数据离线缓存（cache-first，后台静默更新） */
 'use strict';
 
-const CACHE_VERSION = 'travel-h5-v27-dynamic';
+const CACHE_VERSION = 'travel-h5-v28-dynamic';
 const PRECACHE = [
   './',
   'index.html',

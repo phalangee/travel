@@ -55,6 +55,15 @@
     });
     card.appendChild(info);
 
+    // 地图上方列出当日途经点链：名称1 → 名称2 → …
+    const places = (day.map && day.map.places) || [];
+    const named = places.filter(function (p) { return p.name; });
+    if (named.length > 1) {
+      const chain = el('p', 'day-card__chain',
+        named.map(function (p) { return p.name; }).join(' → '));
+      card.appendChild(chain);
+    }
+
     const mapBox = el('div', 'day-card__map');
     mapBox.setAttribute('role', 'img');
     mapBox.setAttribute('aria-label', 'D' + day.dayIndex + ' 路线图');
