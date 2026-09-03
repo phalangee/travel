@@ -250,118 +250,127 @@ function drawDrivingRoute(map, pts) {
   }
 }
 
-/* 标记图层：带碰撞检测的 LabelMarker，标签互相重叠时自动隐藏
- * 优先级低（rank 大）的标签，缩放后空间足够时自动重新显示，
- * 解决多个标记名互相遮盖的问题。短名优先（shortName），无则用全名。 */
+/* 标记：普通 Marker + 名字 label，永远全部显示。
+ * 曾用 LabelsLayer 碰撞检测解决标签遮盖，但图标也会被碰撞隐藏
+ * （小视野下出现"只有线路没有图钉"），不可接受——恢复普通 Marker，
+ * 标签允许重叠。同坐标点仍做微小偏移避免图钉完全重叠。 */
 function applyPlacesToMap(map, pts, drawPath) {
-  // collision:true 仅让文字标签在重叠时自动隐藏，图标始终显示；
-  // 不能开 allowCollision（图标也会互相碰撞隐藏，小视野下会全部消失）
-  // 同坐标的点（如机场与机场酒店）图钉会精确重叠成一个，自动加微小
-  // 偏移让它们分开显示；偏移在 300px 小图上约 10~20px，不影响位置感
   var seen = {};
   var offsetPts = pts.map(function (p) {
     var key = p.location.join(',');
     var n = seen[key] || 0;
     seen[key] = n + 1;
     if (!n) return p;
-    var loc = [p.location[0] + 0.004 * n, p.location[1] + 0.003 * n];
     var q = {}; for (var k in p) q[k] = p[k];
-    q.location = loc;
+    q.location = [p.location[0] + 0.004 * n, p.location[1] + 0.003 * n];
     return q;
   });
-  pts = offsetPts;
-
-  var labelsLayer = new AMap.LabelsLayer({
-    zooms: [3, 20],
-    collision: true,
-    allowCollision: false
-  });
-  map.add(labelsLayer);
-  pts.forEach(function (p, i) {
-    var type = PLACE_TYPE[p.type || 'scenic'] || PLACE_TYPE.scenic;
-    var marker = new AMap.LabelMarker({
+  offsetPts.forEach(function (p, i) {
+    map.add(new AMap.Marker({
       position: p.location,
-      rank: 99 - Math.min(i, 90), // 靠前的途经点优先保留标签
-      icon: {
-        image: type.icon,
-        size: [19, 31],
-        anchor: 'bottom-center'
-      },
-      text: {
+      title: p.name,
+      label: {
         content: (i + 1) + '. ' + (p.shortName || p.name),
-        direction: 'top',
-        offset: [0, -4],
-        fontSize: 12,
-        fillColor: '#1f2937',
-        strokeColor: '#ffffff',
-        strokeWidth: 2
+        offset: new AMap.Pixel(0, -4),
+        direction: 'top'
       }
-    });
-    labelsLayer.add(marker);
+    }));
   });
-  if (drawPath && pts.length > 1) drawDrivingRoute(map, pts);
+  if (drawPath && offsetPts.length > 1) drawDrivingRoute(map, offsetPts);
   map.setFitView(null, false, [40, 40, 40, 40]);
 }
 
-/* ---------- 跳转高德 ----------
- * 两类链接，各有分工：
- * 1) 路线页 ditu.amap.com/dir：from/to + via[n][lnglat]/[name] 结构化参数，
- *    支持多途经点（实测 4 个 via 全部生效），落地即为完整驾车路线，
- *    移动端网页内可一键唤起 App。
- * 2) 多点标注 uri.amap.com/marker：markers 上限 10 个（超出等距采样），
- *    callnative=1 直接唤起 App 展示全部点位。注意不能用
- *    uri.amap.com/navigation——官方规范 via 最多只支持 1 个途经点。 */
-function buildAmapRouteUrl(pts) {
+/* ---------- 页内全屏查看 + 高德App导航 ----------
+ * 地图框太小、放大后看不全：点「全屏」把地图 DOM 节点搬进全屏覆盖层
+ * （仍是同一实例，不新增 WebGL 上下文），放大缩小随意看。
+ * 「高德App导航」用 uri.amap.com/navigation（from→to；官方规范
+ * via 最多 1 个途经点，多途经点的落地页方案在真机上不可靠，弃用），
+ * 真需要导航时一键唤起 App。 */
+function buildAmapNavUrl(pts) {
   if (!pts || pts.length < 2) return null;
-  var name = function (p) { return encodeURIComponent(p.shortName || p.name); };
-  var url = 'https://ditu.amap.com/dir?from[lnglat]=' + pts[0].location.join(',') +
-    '&from[name]=' + name(pts[0]) +
-    '&to[lnglat]=' + pts[pts.length - 1].location.join(',') +
-    '&to[name]=' + name(pts[pts.length - 1]);
-  pts.slice(1, -1).forEach(function (p, i) {
-    url += '&via[' + i + '][lnglat]=' + p.location.join(',') +
-      '&via[' + i + '][name]=' + name(p);
-  });
-  return url + '&policy=0';
+  var f = function (p) { return p.location.join(',') + ',' + encodeURIComponent(p.shortName || p.name); };
+  return 'https://uri.amap.com/navigation?from=' + f(pts[0]) +
+    '&to=' + f(pts[pts.length - 1]) + '&mode=car&policy=0&callnative=1&src=mytravel';
 }
 
-function buildAmapMarkerUrl(pts) {
-  if (!pts || pts.length < 2) return null;
-  var shown = pts;
-  if (pts.length > 10) {
-    shown = [];
-    var step = (pts.length - 1) / 9;
-    for (var i = 0; i < 10; i++) shown.push(pts[Math.round(i * step)]);
+var fsState = null; // 全屏状态：{ node, parent, nextSibling, map, prevStyle, overlay }
+
+function openMapFullscreen(node, navUrl) {
+  if (fsState || !node) return;
+  var rec = null;
+  for (var i = 0; i < activeMaps.length; i++) {
+    if (activeMaps[i].container === node) { rec = activeMaps[i]; break; }
   }
-  var markers = shown.map(function (p) {
-    return p.location.join(',') + ',' + encodeURIComponent(p.shortName || p.name);
-  }).join('|');
-  return 'https://uri.amap.com/marker?markers=' + markers +
-    '&coordinate=gaode&callnative=1&src=mytravel';
+  if (!rec) return;
+
+  var overlay = document.createElement('div');
+  overlay.className = 'map-fullscreen';
+  var bar = document.createElement('div');
+  bar.className = 'map-fullscreen__bar';
+  var title = document.createElement('span');
+  title.className = 'map-fullscreen__title';
+  title.textContent = '路线地图';
+  bar.appendChild(title);
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'map-fullscreen__close';
+  closeBtn.type = 'button';
+  closeBtn.textContent = '✕ 收起';
+  closeBtn.addEventListener('click', closeMapFullscreen);
+  bar.appendChild(closeBtn);
+  if (navUrl) {
+    var nav = document.createElement('a');
+    nav.className = 'map-fullscreen__nav';
+    nav.href = navUrl; nav.target = '_blank'; nav.rel = 'noopener';
+    nav.textContent = '高德App导航 ↗';
+    bar.appendChild(nav);
+  }
+  overlay.appendChild(bar);
+  var holder = document.createElement('div');
+  holder.className = 'map-fullscreen__holder';
+  overlay.appendChild(holder);
+  document.body.appendChild(overlay);
+
+  fsState = {
+    node: node,
+    parent: node.parentNode,
+    nextSibling: node.nextSibling,
+    map: rec.map,
+    prevStyle: { width: node.style.width, height: node.style.height },
+    overlay: overlay
+  };
+  holder.appendChild(node); // DOM 节点搬家，实例不变
+  node.style.width = '100%';
+  node.style.height = '100%';
+  document.body.style.overflow = 'hidden';
+  rec.map.resize();
+  rec.map.setFitView(null, false, [60, 60, 60, 60]);
 }
 
-/* 地图右上角放「路线」与「App」两个按钮（地图本身可拖动，用按钮而非全图点击） */
-function addOpenInAmapButton(container, pts) {
+function closeMapFullscreen() {
+  if (!fsState) return;
+  var s = fsState;
+  fsState = null;
+  s.parent.insertBefore(s.node, s.nextSibling);
+  s.node.style.width = s.prevStyle.width;
+  s.node.style.height = s.prevStyle.height;
+  s.overlay.remove();
+  document.body.style.overflow = '';
+  s.map.resize();
+  s.map.setFitView(null, false, [40, 40, 40, 40]);
+}
+
+/* 地图右上角「全屏」按钮 */
+function addMapControls(container, node, pts) {
   if (container.__amapBtn) container.__amapBtn.remove();
-  var routeUrl = buildAmapRouteUrl(pts);
-  var markerUrl = buildAmapMarkerUrl(pts);
-  if (!routeUrl) return;
-  var wrap = document.createElement('span');
-  wrap.className = 'map-jump-links';
-  var a1 = document.createElement('a');
-  a1.className = 'map-open-amap map-open-amap--primary';
-  a1.href = routeUrl; a1.target = '_blank'; a1.rel = 'noopener';
-  a1.textContent = '查看路线 ↗';
-  wrap.appendChild(a1);
-  if (markerUrl) {
-    var a2 = document.createElement('a');
-    a2.className = 'map-open-amap';
-    a2.href = markerUrl; a2.target = '_blank'; a2.rel = 'noopener';
-    a2.textContent = 'App打开';
-    wrap.appendChild(a2);
-  }
-  container.appendChild(wrap);
-  container.__amapBtn = wrap;
+  var navUrl = buildAmapNavUrl(pts);
+  if (!navUrl) return;
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'map-open-amap';
+  btn.textContent = '全屏 ⤢';
+  btn.addEventListener('click', function () { openMapFullscreen(node, navUrl); });
+  container.appendChild(btn);
+  container.__amapBtn = btn;
 }
 
 /* ---------- 日程卡共享地图：整页仅 1 个实例 ----------
@@ -402,7 +411,7 @@ function initDeckMaps(specs) {
   }
 
   function activate(spec) {
-    if (!spec) return;
+    if (!spec || fsState) return; // 全屏期间不切换宿主
     renderLoading(spec.container);
     loadAMap(function (AMap, err) {
       if (!AMap) {
@@ -447,7 +456,7 @@ function initDeckMaps(specs) {
           sharedDeckMap.map.clearMap();
         }
         applyPlacesToMap(sharedDeckMap.map, spec.pts, true);
-        addOpenInAmapButton(spec.container, spec.pts);
+        addMapControls(spec.container, sharedDeckMap.host, spec.pts);
         sharedDeckMap.map.resize();
       } catch (e) {
         console.error('[Map] 共享地图切换失败:', e);
@@ -464,6 +473,7 @@ function initDeckMaps(specs) {
   deck.addEventListener('scroll', onScroll, { passive: true });
   onScroll(); // 初次进入视口即定位
 }
+
 
 /* ---------- 创建动态地图 ---------- */
 function createDynamicMap(container, places, note, drawPath) {
@@ -508,7 +518,7 @@ function createDynamicMap(container, places, note, drawPath) {
 
       // 添加标记、折线并自动调整视野
       applyPlacesToMap(map, pts, drawPath);
-      addOpenInAmapButton(container, pts);
+      addMapControls(container, container, pts);
 
       // 注册到活跃列表
       registerMap(container, map);

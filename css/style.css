@@ -249,3 +249,25 @@ button { font: inherit; cursor: pointer; }
 .map-jump-links { position: absolute; top: 8px; right: 8px; z-index: 20; display: flex; gap: 6px; }
 .map-jump-links .map-open-amap { position: static; }
 .map-open-amap--primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+/* ---------- 地图全屏覆盖层 ---------- */
+.map-fullscreen {
+  position: fixed; inset: 0; z-index: 100; background: #0f172a;
+  display: flex; flex-direction: column;
+}
+.map-fullscreen__bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; padding-top: calc(12px + env(safe-area-inset-top));
+  background: #0f172a;
+}
+.map-fullscreen__title { color: #e2e8f0; font-size: 15px; font-weight: 600; flex: 1; }
+.map-fullscreen__close {
+  background: rgba(255,255,255,.14); color: #fff; border: none; border-radius: 999px;
+  padding: 6px 14px; font-size: 14px;
+}
+.map-fullscreen__nav {
+  background: #2563eb; color: #fff; border-radius: 999px;
+  padding: 6px 14px; font-size: 14px; font-weight: 600; text-decoration: none;
+}
+.map-fullscreen__holder { flex: 1; position: relative; }
+.map-fullscreen .map-open-amap { display: none; } /* 全屏内不再显示入口按钮 */
