@@ -202,11 +202,29 @@ function drawDrivingRoute(map, pts) {
   // 先画直线折线兜底，规划返回后替换为真实路线
   var straight = drawPolyline(map, pts.map(function (p) { return p.location; }), 3);
 
+  /* 把离路线过远（>300m）的途经点坐标拼接进路径：高德会静默丢弃
+   * 路网覆盖不到的途经点（如边境公路），或只贴到最近道路，导致图钉
+   * 悬在路线外"断线"。拼接后图钉必然与线相连（支线形式）。 */
+  var spliceWaypoints = function (path, pts) {
+    var out = path.slice();
+    pts.slice(1, -1).forEach(function (p) {
+      var best = -1, bestD = 1e9;
+      for (var i = 0; i < out.length; i++) {
+        var dx = (out[i][0] - p.location[0]) * 85;
+        var dy = (out[i][1] - p.location[1]) * 111;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d < bestD) { bestD = d; best = i; }
+      }
+      if (bestD > 0.3) out.splice(best + 1, 0, p.location.slice());
+    });
+    return out;
+  };
+
   var finish = function (path) {
     routePathCache[cacheKey] = path || [];
     if (!path || !path.length) return; // 失败：保留直线折线
     try { map.remove(straight); } catch (e) { /* ignore */ }
-    drawPolyline(map, path, 5);
+    drawPolyline(map, spliceWaypoints(path, pts), 5);
     map.setFitView();
   };
 
