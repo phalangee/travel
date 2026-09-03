@@ -283,9 +283,11 @@ function applyPlacesToMap(map, pts, drawPath) {
 /* ---------- 页内全屏查看 + 高德App导航 ----------
  * 地图框太小、放大后看不全：点「全屏」把地图 DOM 节点搬进全屏覆盖层
  * （仍是同一实例，不新增 WebGL 上下文），放大缩小随意看。
- * 「高德App导航」用 uri.amap.com/navigation（from→to；官方规范
- * via 最多 1 个途经点，多途经点的落地页方案在真机上不可靠，弃用），
- * 真需要导航时一键唤起 App。 */
+ * 「高德App导航」优先用高德原生 scheme 深链（iOS iosamap://path /
+ * Android amapuri://route/plan/），支持 vian/vialons/vialats/vianames
+ * 多途经点（| 分隔，无个数限制），App 内展示完整路径+全部途经点；
+ * 未装 App / 被浏览器拦截（如微信）时 1.5s 内页面未隐藏，降级打开
+ * uri.amap.com/navigation 网页版（via 限 1 个途经点，聊胜于无）。 */
 function buildAmapNavUrl(pts) {
   if (!pts || pts.length < 2) return null;
   var f = function (p) { return p.location.join(',') + ',' + encodeURIComponent(p.shortName || p.name); };
@@ -293,9 +295,54 @@ function buildAmapNavUrl(pts) {
     '&to=' + f(pts[pts.length - 1]) + '&mode=car&policy=0&callnative=1&src=mytravel';
 }
 
+/* 原生深链：完整路径 + 全部途经点 */
+function buildAmapAppUrl(pts) {
+  if (!pts || pts.length < 2) return null;
+  var name = function (p) { return p.shortName || p.name; };
+  var from = pts[0], to = pts[pts.length - 1];
+  var vias = pts.slice(1, -1);
+  var viaQ = '';
+  if (vias.length) {
+    viaQ = '&vian=' + vias.length +
+      '&vialons=' + vias.map(function (p) { return p.location[0]; }).join('|') +
+      '&vialats=' + vias.map(function (p) { return p.location[1]; }).join('|') +
+      '&vianames=' + encodeURIComponent(vias.map(name).join('|'));
+  }
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var common = 'sourceApplication=mytravel&dev=0&t=0' +
+    '&slat=' + from.location[1] + '&slon=' + from.location[0] + '&sname=' + encodeURIComponent(name(from)) +
+    '&dlat=' + to.location[1] + '&dlon=' + to.location[0] + '&dname=' + encodeURIComponent(name(to));
+  if (isIOS) return 'iosamap://path?' + common + viaQ;
+  return 'amapuri://route/plan/?' + common + viaQ;
+}
+
+/* 点击导航：先试原生深链，1.5s 内页面未被切走则降级网页版 */
+function jumpToAmapApp(pts) {
+  var appUrl = buildAmapAppUrl(pts);
+  var webUrl = buildAmapNavUrl(pts);
+  if (!appUrl) { if (webUrl) window.open(webUrl, '_blank'); return; }
+
+  var fallbackTimer = setTimeout(function () {
+    if (!document.hidden && webUrl) window.open(webUrl, '_blank');
+  }, 1500);
+
+  var onHide = function () {
+    clearTimeout(fallbackTimer);
+    window.removeEventListener('pagehide', onHide);
+    document.removeEventListener('visibilitychange', onVis);
+  };
+  var onVis = function () { if (document.hidden) onHide(); };
+  window.addEventListener('pagehide', onHide);
+  document.addEventListener('visibilitychange', onVis);
+
+  // scheme 唤起：iOS 必须用 location.href（iframe 方式在多数移动浏览器
+  // 已失效），未装 App 时 location 赋值自定义 scheme 不会产生导航
+  window.location.href = appUrl;
+}
+
 var fsState = null; // 全屏状态：{ node, parent, nextSibling, map, prevStyle, overlay }
 
-function openMapFullscreen(node, navUrl) {
+function openMapFullscreen(node, navPts) {
   if (fsState || !node) return;
   var rec = null;
   for (var i = 0; i < activeMaps.length; i++) {
@@ -317,11 +364,12 @@ function openMapFullscreen(node, navUrl) {
   closeBtn.textContent = '✕ 收起';
   closeBtn.addEventListener('click', closeMapFullscreen);
   bar.appendChild(closeBtn);
-  if (navUrl) {
-    var nav = document.createElement('a');
+  if (navPts) {
+    var nav = document.createElement('button');
+    nav.type = 'button';
     nav.className = 'map-fullscreen__nav';
-    nav.href = navUrl; nav.target = '_blank'; nav.rel = 'noopener';
     nav.textContent = '高德App导航 ↗';
+    nav.addEventListener('click', function () { jumpToAmapApp(navPts); });
     bar.appendChild(nav);
   }
   overlay.appendChild(bar);
@@ -368,7 +416,7 @@ function addMapControls(container, node, pts) {
   btn.type = 'button';
   btn.className = 'map-open-amap';
   btn.textContent = '全屏 ⤢';
-  btn.addEventListener('click', function () { openMapFullscreen(node, navUrl); });
+  btn.addEventListener('click', function () { openMapFullscreen(node, pts); });
   container.appendChild(btn);
   container.__amapBtn = btn;
 }
